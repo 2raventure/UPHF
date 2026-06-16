@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; color: #1a1a1a; background: transparent; }
+:root { --blue: #008db0; --blue-dk: #005f77; --blue-lt: #e8f5f9; --gray-bg: #f6f6f6; --gray-line: rgba(0,0,0,0.09); --text: #1a1a1a; --text2: #666; --green: #1a7a3e; --green-lt: #e6f4ec; --orange: #c05000; --orange-lt: #fff3e6; }
+.hband { background: var(--blue); color: #fff; padding: 14px 20px 12px; border-radius: 10px 10px 0 0; }
+.hband h2 { font-size: 16px; font-weight: 600; margin: 0 0 2px; }
+.hband p { font-size: 12px; opacity: .8; margin: 0; }
+.blk { padding: 16px 20px; border-bottom: 1px solid var(--gray-line); }
+.blk:last-child { border-bottom: none; }
+.blk-bg { background: var(--gray-bg); }
+.sec-title { font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+.toggle-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.tgl { flex: 1; padding: 7px 6px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-size: 12px; cursor: pointer; color: var(--text2); font-family: inherit; transition: .15s; }
+.tgl.on { background: var(--blue); color: #fff; border-color: var(--blue); font-weight: 600; }
+.profile-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.prf { flex: 1; padding: 7px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-size: 12px; cursor: pointer; color: var(--text2); font-family: inherit; transition: .15s; text-align: center; }
+.prf.on { background: var(--blue-dk); color: #fff; border-color: var(--blue-dk); font-weight: 600; }
+.sr { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.sr label { font-size: 13px; color: var(--text2); min-width: 165px; flex-shrink: 0; }
+.sr input[type=range] { flex: 1; accent-color: var(--blue); cursor: pointer; }
+.sr input[type=month] { flex: 1; font-family: inherit; font-size: 13px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 6px; color: var(--text); background: #fff; }
+.sv { font-size: 13px; font-weight: 600; min-width: 80px; text-align: right; color: var(--text); white-space: nowrap; }
+.mg { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+.mc { background: var(--gray-bg); border-radius: 8px; padding: 10px 12px; text-align: center; }
+.mv { font-size: 18px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.ml { font-size: 11px; color: var(--text2); margin-top: 3px; line-height: 1.3; }
+.mc.hi .mv { color: var(--blue); }
+.mc.warn .mv { color: var(--orange); }
+.prog-wrap { margin: 0 0 14px; }
+.prog-bg { background: #ddd; border-radius: 5px; height: 10px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 5px; background: var(--blue); transition: width .4s; }
+.prog-fill.danger { background: #c0392b; }
+.prog-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text2); margin-top: 4px; }
+.info-box { background: var(--blue-lt); border-left: 3px solid var(--blue); border-radius: 0 6px 6px 0; padding: 9px 12px; margin-bottom: 14px; font-size: 13px; color: var(--text); line-height: 1.5; }
+.air-box { background: #fef9e7; border-left: 3px solid #e67e22; border-radius: 0 6px 6px 0; padding: 9px 12px; margin-bottom: 14px; font-size: 13px; color: #7d4c00; line-height: 1.5; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+table td { padding: 5px 0; border-bottom: 1px solid var(--gray-line); color: var(--text); }
+table tr:last-child td { border-bottom: none; font-weight: 600; }
+table .tr { text-align: right; }
+.tbr { display: flex; gap: 5px; margin-bottom: 12px; }
+.tb { flex: 1; padding: 7px 4px; background: #fff; border: 1px solid #ccc; border-radius: 8px; font-size: 12px; cursor: pointer; color: var(--text2); font-family: inherit; transition: .15s; text-align: center; }
+.tb.on { background: var(--blue); color: #fff; border-color: var(--blue); font-weight: 600; }
+.tp { display: none; }
+.tp.on { display: block; }
+.acard { background: #fff; border: 1px solid var(--gray-line); border-radius: 10px; padding: 12px 16px; margin-bottom: 10px; }
+.acard:last-child { margin-bottom: 0; }
+.ah { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; flex-wrap: wrap; }
+.ai { font-size: 18px; color: var(--blue); flex-shrink: 0; }
+.at { font-size: 14px; font-weight: 600; color: var(--text); }
+.as { margin-left: auto; background: var(--green-lt); color: var(--green); font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 12px; margin-right: 4px; vertical-align: middle; }
+.badge-etu { background: #dbeafe; color: #1e40af; }
+.badge-per { background: #fce7f3; color: #9d174d; }
+.badge-all { background: #d1fae5; color: #065f46; }
+.badge-free { background: #dcfce7; color: #166534; font-size: 11px; }
+.ab { font-size: 12.5px; color: var(--text2); line-height: 1.7; }
+.ab ul { padding-left: 16px; margin-top: 4px; }
+.ab li { margin-bottom: 3px; }
+.rl { color: var(--blue); text-decoration: none; border-bottom: 1px dashed var(--blue); }
+strong { font-weight: 600; }
+.covoit-bonus { background: var(--green-lt); border: 1px solid #a7f3d0; border-radius: 8px; padding: 10px 14px; margin-top: 10px; font-size: 13px; color: var(--green); line-height: 1.6; }
+.tarif-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-top: 8px; }
+.tarif-table th { background: var(--blue-lt); color: var(--blue-dk); font-weight: 700; padding: 6px 8px; text-align: left; font-size: 11px; border-bottom: 2px solid var(--blue); }
+.tarif-table td { padding: 5px 8px; border-bottom: 1px solid var(--gray-line); color: var(--text); }
+.tarif-table tr:last-child td { border-bottom: none; }
+.tarif-table .price { font-weight: 700; color: var(--blue-dk); text-align: right; white-space: nowrap; }
+</style>
+</head>
+<body>
+<div style="border-radius:10px; border: 1px solid #ddd; overflow:hidden;">
+
+<div class="hband">
+  <h2>&#x1F4B0; Calculateur budget mobilité</h2>
+  <p>Université Polytechnique Hauts-de-France — Campus Mont Houy</p>
+</div>
+
+<div class="blk blk-bg">
+  <div class="sec-title">Mon profil</div>
+  <div class="profile-row">
+    <button class="prf on" id="prf-etu" onclick="setProfil('etu')">&#127979; Étudiant·e</button>
+    <button class="prf" id="prf-per" onclick="setProfil('per')">&#128188; Personnel</button>
+  </div>
+
+  <div class="sec-title">Mon véhicule</div>
+  <div class="toggle-row">
+    <button class="tgl on" id="tgl-achat" onclick="setMode('achat')">&#128203; Achat / crédit</button>
+    <button class="tgl" id="tgl-leasing" onclick="setMode('leasing')">&#128260; Leasing / LLD</button>
+    <button class="tgl" id="tgl-none" onclick="setMode('none')">&#128683; Pas de voiture</button>
+  </div>
+
+  <div id="panel-achat">
+    <div class="sr"><label for="prix-achat">Prix du véhicule</label><input type="range" id="prix-achat" min="500" max="40000" step="500" value="14000" oninput="update()"><span class="sv" id="out-prix-achat">14 000 €</span></div>
+    <div class="sr"><label for="apport">Apport personnel</label><input type="range" id="apport" min="0" max="15000" step="500" value="2000" oninput="update()"><span class="sv" id="out-apport">2 000 €</span></div>
+    <div class="sr"><label for="duree-credit">Durée du crédit (mois)</label><input type="range" id="duree-credit" min="0" max="84" step="6" value="48" oninput="update()"><span class="sv" id="out-duree-credit">48 mois</span></div>
+    <div class="sr"><label for="taux-credit">Taux annuel crédit (%)</label><input type="range" id="taux-credit" min="0" max="12" step="0.25" value="5" oninput="update()"><span class="sv" id="out-taux-credit">5,00 %</span></div>
+    <div class="sr"><label for="date-achat">Date d'achat</label><input type="month" id="date-achat" value="2022-09" oninput="update()"></div>
+  </div>
+
+  <div id="panel-leasing" style="display:none;">
+    <div class="sr"><label for="loyer">Loyer mensuel LLD/LOA</label><input type="range" id="loyer" min="100" max="800" step="10" value="280" oninput="update()"><span class="sv" id="out-loyer">280 €/mois</span></div>
+    <div class="sr"><label for="premier-loyer">1er loyer majoré</label><input type="range" id="premier-loyer" min="0" max="5000" step="100" value="1000" oninput="update()"><span class="sv" id="out-premier-loyer">1 000 €</span></div>
+    <div class="sr"><label for="duree-leasing">Durée du contrat (mois)</label><input type="range" id="duree-leasing" min="12" max="60" step="6" value="36" oninput="update()"><span class="sv" id="out-duree-leasing">36 mois</span></div>
+    <div class="sr"><label for="date-leasing">Date de début</label><input type="month" id="date-leasing" value="2023-06" oninput="update()"></div>
+  </div>
+</div>
+
+<div class="blk blk-bg">
+  <div class="sec-title">Mon trajet domicile–campus</div>
+  <div class="sr"><label for="km">Distance aller (km)</label><input type="range" id="km" min="1" max="60" step="1" value="18" oninput="update()"><span class="sv" id="out-km">18 km</span></div>
+  <div class="sr"><label for="jours">Jours présents / semaine</label><input type="range" id="jours" min="1" max="5" step="1" value="4" oninput="update()"><span class="sv" id="out-jours">4 j/sem</span></div>
+  <div class="sr"><label for="carburant">Prix carburant (€/L)</label><input type="range" id="carburant" min="1.50" max="2.20" step="0.05" value="1.80" oninput="update()"><span class="sv" id="out-carburant">1,80 €</span></div>
+  <div class="sr"><label for="conso">Consommation (L/100 km)</label><input type="range" id="conso" min="4" max="12" step="0.5" value="7" oninput="update()"><span class="sv" id="out-conso">7,0 L</span></div>
+</div>
+
+<div class="blk">
+  <div class="sec-title" style="margin-bottom:12px;">Coût global de ma voiture</div>
+  <div class="mg">
+    <div class="mc hi"><div class="mv" id="m-total-annuel">—</div><div class="ml">Coût annuel total</div></div>
+    <div class="mc"><div class="mv" id="m-mensuel">—</div><div class="ml">Par mois</div></div>
+    <div class="mc warn"><div class="mv" id="m-deja-paye">—</div><div class="ml" id="ml-engage">Déjà engagé</div></div>
+    <div class="mc"><div class="mv" id="m-reste">—</div><div class="ml" id="ml-reste">Reste à payer</div></div>
+  </div>
+  <div id="prog-section" class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="prog-bar" style="width:0%"></div></div>
+    <div class="prog-label"><span id="prog-left">Payé</span><span id="prog-right">Total</span></div>
+  </div>
+  <div class="info-box" id="info-acq"></div>
+
+  <div class="air-box">
+    &#x1F32B;&#xFE0F; <strong>Qualité de l'air :</strong> les transports routiers sont responsables de <strong>31 % des émissions de gaz à effet de serre</strong> en France. Dans le Valenciennois, la pollution atmosphérique contribue à des milliers de décès prématurés chaque année dans les Hauts-de-France. Chaque trajet alternatif compte : moins de CO₂, moins de particules fines, moins de maladies cardiovasculaires et respiratoires.
+  </div>
+
+  <table>
+    <tr><td>Acquisition (annualisé)</td><td class="tr" id="b-acq">—</td></tr>
+    <tr><td style="padding-left:12px;color:#888;font-size:12px;">Carburant domicile–campus</td><td class="tr" style="color:#888;font-size:12px;" id="b-carb">—</td></tr>
+    <tr><td style="padding-left:12px;color:#888;font-size:12px;">Entretien &amp; réparations</td><td class="tr" style="color:#888;font-size:12px;" id="b-ent">—</td></tr>
+    <tr><td style="padding-left:12px;color:#888;font-size:12px;">Assurance, stationnement…</td><td class="tr" style="color:#888;font-size:12px;" id="b-aut">—</td></tr>
+    <tr><td><strong>Total annuel estimé</strong></td><td class="tr" id="b-tot">—</td></tr>
+  </table>
+</div>
+
+<div class="blk">
+  <div class="sec-title" style="margin-bottom:10px;">Et si j'essayais autre chose ?</div>
+  <div class="info-box" id="nudge"></div>
+
+  <div class="tbr">
+    <button class="tb on" onclick="showTab('tram',this)">&#128653; Transports</button>
+    <button class="tb" onclick="showTab('velo',this)">&#128690; Vélo</button>
+    <button class="tb" onclick="showTab('covoit',this)">&#128101; Covoiturage</button>
+    <button class="tb" onclick="showTab('aides',this)">&#128142; Aides</button>
+  </div>
+
+  <div class="tp on" id="tab-tram">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128653;</span><span class="at">Réseau Transvilles (tram + bus)</span><span class="as" id="sav-tram">—</span></div>
+      <div class="ab">
+        Le campus Mont Houy est desservi par <strong>4 stations de tramway T1</strong> et plusieurs lignes de bus.
+        <table class="tarif-table" style="margin-top:10px;">
+          <tr><th>Titre</th><th>Public</th><th class="price">Tarif</th></tr>
+          <tr><td><strong>Pass&amp;Go</strong> (illimité annuel)</td><td><span class="badge badge-etu">&#127979; &lt;25 ans</span></td><td class="price">20 € de frais de dossier</td></tr>
+          <tr><td><strong>Pass Elit</strong> (annuel)</td><td><span class="badge badge-per">&#128188; Personnel</span></td><td class="price">360 €/an</td></tr>
+          <tr><td><strong>Pass Lib</strong> (mensuel)</td><td><span class="badge badge-all">Tous</span></td><td class="price">38,50 €/mois</td></tr>
+          <tr><td><strong>SIMOUV</strong> (tarif solidaire)</td><td><span class="badge badge-all">Sous conditions</span></td><td class="price">Via CCAS</td></tr>
+        </table>
+        <div style="margin-top:8px;font-size:12px;color:var(--text2);">&#128161; Personnel UPHF : l'abonnement de transport est <strong>pris en charge à 75 %</strong> par l'employeur — soit ~90 € nets pour le Pass Elit annuel.</div>
+      </div>
+    </div>
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128690;</span><span class="at">Vélos en libre-service — Donkey Bike</span><span class="as">Pour tous</span></div>
+      <div class="ab">Location de vélos (classiques et électriques) à la demande sur le territoire du Valenciennois. Idéal pour les trajets ponctuels ou pour tester le vélo avant d'investir. <a class="rl" href="https://www.donkey.bike/fr" target="_blank">donkey.bike/fr</a></div>
+    </div>
+  </div>
+
+  <div class="tp" id="tab-velo">
+    <div id="velo-etu-content">
+      <div class="acard">
+        <div class="ah"><span class="ai">&#127381;</span><span class="at">Grinsa — vélo reconditionné à 3 €/mois</span><span class="as" id="sav-velo-grinsa">~<span id="sv-grinsa">—</span>/an économisé</span></div>
+        <div class="ab">
+          <span class="badge badge-etu">&#127979; Étudiant·e</span> Location longue durée d'un vélo reconditionné pour seulement <strong>3 €/mois</strong>, soit <strong>36 €/an</strong>. Entretien inclus. <a class="rl" href="https://www.grinsa.fr/" target="_blank">grinsa.fr</a>
+        </div>
+      </div>
+      <div class="acard">
+        <div class="ah"><span class="ai">&#9889;</span><span class="at">Vebos — VAE gratuit à la BU Mont Houy</span><span class="as badge-free">Gratuit</span></div>
+        <div class="ab">
+          <span class="badge badge-etu">&#127979; Étudiant·e</span> <strong>Vélo à assistance électrique équipé d'un kit d'électrification (Vebos)</strong> disponible en prêt gratuit à la <strong>Bibliothèque universitaire du campus Mont Houy</strong>. Idéal pour tester le VAE sans engagement.
+        </div>
+      </div>
+      <div class="acard">
+        <div class="ah"><span class="ai">&#128690;</span><span class="at">Maison du vélo de Valenciennes — occasion ~120 €</span><span class="as" id="sav-velo-occ">—</span></div>
+        <div class="ab">
+          <span class="badge badge-all">Tous</span> Achat d'un vélo d'occasion en bon état autour de <strong>120 €</strong>. Accompagnement, conseils et ateliers de réparation.
+        </div>
+      </div>
+    </div>
+    <div id="velo-per-content" style="display:none;">
+      <div class="acard">
+        <div class="ah"><span class="ai">&#9889;</span><span class="at">Flotte VAE reconditionnés UPHF</span><span class="as">Personnel</span></div>
+        <div class="ab">
+          <span class="badge badge-per">&#128188; Personnel</span> Une flotte de <strong>vélos électriques reconditionnés</strong> est disponible sur le campus. Renseignements auprès d'<strong>Angelina et Bertrand</strong> (service mobilité UPHF).
+        </div>
+      </div>
+      <div class="acard">
+        <div class="ah"><span class="ai">&#127381;</span><span class="at">Grinsa — vélo reconditionné</span></div>
+        <div class="ab">
+          <span class="badge badge-all">Tous</span> Location longue durée de vélos reconditionnés. <a class="rl" href="https://www.grinsa.fr/" target="_blank">grinsa.fr</a>
+        </div>
+      </div>
+    </div>
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128690;</span><span class="at">Solimob — VAE en location solidaire</span><span class="as" id="sav-velo-solimob">—</span></div>
+      <div class="ab">
+        <span class="badge badge-all">Tous</span> Location d'un <strong>vélo à assistance électrique à 60 €/mois</strong>. Accompagnement mobilité, ateliers vélo (Cambrai &amp; Anzin). <a class="rl" href="https://solimob.fr/location-de-vehicules/" target="_blank">solimob.fr</a>
+      </div>
+    </div>
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128295;</span><span class="at">Autres ressources vélo</span></div>
+      <div class="ab">
+        <ul>
+          <li><strong>Heureux cyclage</strong> (ateliers autoréparation, carte nationale) : <a class="rl" href="https://www.heureux-cyclage.org/" target="_blank">heureux-cyclage.org</a></li>
+          <li><strong>Programme Vélos Égaux</strong> (diagnostic + cours + vélo, France entière, gratuit) : <a class="rl" href="https://www.veloegaux.fr/devenir-beneficiaire/" target="_blank">veloegaux.fr</a></li>
+          <li><strong>Donkey Bike</strong> (vélos libre-service, Valenciennois) : <a class="rl" href="https://www.donkey.bike/fr" target="_blank">donkey.bike/fr</a></li>
+          <li><strong>Évènements vélo</strong> (brocs, initiations) : <a class="rl" href="https://2raventure.com/2026/02/13/evenements-velo-ou-sinformer-tester-et-passer-a-laction/" target="_blank">2raventure.com</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tp" id="tab-covoit">
+    <div class="acard">
+      <div class="ah"><span class="ai">&#128101;</span><span class="at">Covoiturage — PassPass</span><span class="as" id="sav-covoit">—</span></div>
+      <div class="ab">
+        <a class="rl" href="https://www.passpasscovoiturage.fr/" target="_blank">PassPass covoiturage</a> (Hauts-de-France). Une communauté <strong>Valdunes / Le Poirier</strong> peut être créée sur <a class="rl" href="https://passpass.fr" target="_blank">passpass.fr</a> — contactez Solimob : <a class="rl" href="mailto:marie.godmez@associationphare.fr">Marie Godmez</a> — 06 84 28 22 99.
+      </div>
+    </div>
+    <div class="covoit-bonus">
+      &#x1F195; <strong>Bonus conducteur UPHF :</strong> proposer un trajet en covoiturage vous donne accès aux <strong>places de stationnement dédiées</strong> sur le campus — plus proches des entrées et toujours disponibles. <span id="fmd-txt"></span>
+    </div>
+    <div class="acard" style="margin-top:10px;">
+      <div class="ah"><span class="ai">&#128250;</span><span class="at">Un trajet offert à un étudiant sans voiture</span></div>
+      <div class="ab">
+        Covoiturer, c'est aussi permettre à un étudiant ou un collègue qui <strong>n'a pas les moyens de se déplacer</strong> d'accéder au campus. Un siège vide dans votre voiture peut changer une situation précaire — et ça ne vous coûte rien de plus.
+      </div>
+    </div>
+    <div id="fmd-card" style="display:none;" class="acard" style="margin-top:10px;">
+      <div class="ah"><span class="ai">&#128176;</span><span class="at">Forfait Mobilités Durables (FMD)</span><span class="as">Personnel : jusqu'à 300 €/an</span></div>
+      <div class="ab">
+        <span class="badge badge-per">&#128188; Personnel</span> L'UPHF verse un <strong>Forfait Mobilités Durables jusqu'à 300 €/an</strong> pour les trajets domicile-travail effectués en covoiturage ou à vélo. Exonéré de cotisations sociales et d'impôts. Renseignements : <a class="rl" href="https://numerique.uphf.fr/services/covoiturage" target="_blank">numerique.uphf.fr/services/covoiturage</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="tp" id="tab-aides">
+    <div id="aides-etu" class="acard" style="margin-bottom:10px;">
+      <div class="ah"><span class="ai">&#127979;</span><span class="at">Aides spécifiques étudiants</span></div>
+      <div class="ab">
+        <ul>
+          <li><strong>Pass&amp;Go SNCF+TER</strong> (–25 ans) : tram + bus + TER illimité pour <strong>20 € de frais de dossier</strong></li>
+          <li><strong>Vebos à la BU</strong> : VAE en prêt gratuit, campus Mont Houy</li>
+          <li><strong>Grinsa</strong> : vélo reconditionné <strong>3 €/mois</strong> <a class="rl" href="https://www.grinsa.fr/" target="_blank">grinsa.fr</a></li>
+          <li><strong>Maison du vélo Valenciennes</strong> : vélo d'occasion ~<strong>120 €</strong></li>
+          <li><strong>Vélos Égaux</strong> : programme gratuit (cours + accès vélo) <a class="rl" href="https://www.veloegaux.fr/devenir-beneficiaire/" target="_blank">veloegaux.fr</a></li>
+          <li><strong>Donkey Bike</strong> : vélo libre-service à la demande <a class="rl" href="https://www.donkey.bike/fr" target="_blank">donkey.bike/fr</a></li>
+        </ul>
+      </div>
+    </div>
+    <div id="aides-per" style="display:none;" class="acard" style="margin-bottom:10px;">
+      <div class="ah"><span class="ai">&#128188;</span><span class="at">Aides spécifiques personnel UPHF</span></div>
+      <div class="ab">
+        <ul>
+          <li><strong>Abonnement TC pris en charge à 75 %</strong> (Pass Elit ~90 € nets/an)</li>
+          <li><strong>Forfait Mobilités Durables</strong> : jusqu'à <strong>300 €/an</strong> (vélo + covoiturage) <a class="rl" href="https://numerique.uphf.fr/services/covoiturage" target="_blank">voir ici</a></li>
+          <li><strong>Flotte VAE reconditionnés UPHF</strong> : contact Angelina &amp; Bertrand</li>
+          <li><strong>Recharge voiture électrique gratuite</strong> sur le campus</li>
+          <li><strong>Leasing social VE</strong> : prise en charge 40 % état <a class="rl" href="https://www.ecologie.gouv.fr/leasing-social" target="_blank">ecologie.gouv.fr</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="acard" style="margin-bottom:10px;">
+      <div class="ah"><span class="ai">&#128295;</span><span class="at">Garages solidaires</span></div>
+      <div class="ab">
+        <span class="badge badge-all">Tous (sous conditions)</span>
+        <ul style="margin-top:6px;">
+          <li><strong>Poinfor</strong> – Valenciennes, 03 27 20 17 29</li>
+          <li><a class="rl" href="https://www.siae-du-valenciennois.fr/garage-solidaire-du-hainaut/" target="_blank">Garage solidaire du Hainaut</a> (Denain)</li>
+          <li><a class="rl" href="https://manaara.org/deroulement-du-programme-solidaire-mana-ara/" target="_blank">Norauto −30 %</a> &bull; <a class="rl" href="https://www.caremakersmobility.com/fr/offre-solidaire-entretien-et-reparation" target="_blank">Renault Caremakers −40 %</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="acard">
+      <div class="ah"><span class="ai">&#127968;</span><span class="at">Solimob &amp; autopartage</span></div>
+      <div class="ab">
+        <a class="rl" href="https://solimob.fr/location-de-vehicules/" target="_blank">Solimob</a> : location solidaire (voitures, VAE, 60 €/mois), ateliers vélo, accompagnement covoiturage. <a class="rl" href="https://hauts-de-france.citiz.coop/" target="_blank">Citiz Hauts-de-France</a> : autopartage. Microcrédit : <a class="rl" href="https://www.udaf59.fr/services-aux-familles/point-conseil-budget/microcredit/" target="_blank">UDAF 59</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+var mode = 'achat';
+var profil = 'etu';
+
+function setProfil(p) {
+  profil = p;
+  document.getElementById('prf-etu').classList.toggle('on', p === 'etu');
+  document.getElementById('prf-per').classList.toggle('on', p === 'per');
+  document.getElementById('velo-etu-content').style.display = p === 'etu' ? '' : 'none';
+  document.getElementById('velo-per-content').style.display = p === 'per' ? '' : 'none';
+  document.getElementById('aides-etu').style.display = p === 'etu' ? '' : 'none';
+  document.getElementById('aides-per').style.display = p === 'per' ? '' : 'none';
+  document.getElementById('fmd-card').style.display = p === 'per' ? '' : 'none';
+  update();
+}
+
+function setMode(m) {
+  mode = m;
+  ['achat','leasing','none'].forEach(function(x){ document.getElementById('tgl-'+x).classList.toggle('on', x===m); });
+  document.getElementById('panel-achat').style.display = m === 'achat' ? '' : 'none';
+  document.getElementById('panel-leasing').style.display = m === 'leasing' ? '' : 'none';
+  update();
+}
+
+function moisDepuis(val) {
+  if (!val) return 0;
+  var parts = val.split('-');
+  var y = parseInt(parts[0]), mo = parseInt(parts[1]);
+  var now = new Date();
+  return Math.max(0, (now.getFullYear()-y)*12 + (now.getMonth()+1-mo));
+}
+
+function fr(n) { return Math.round(n).toLocaleString('fr-FR') + ' €'; }
+
+function mensualite(capital, tauxAn, nbMois) {
+  if (nbMois === 0) return 0;
+  if (tauxAn === 0) return capital / nbMois;
+  var tm = tauxAn / 100 / 12;
+  return capital * tm * Math.pow(1+tm, nbMois) / (Math.pow(1+tm, nbMois) - 1);
+}
+
+function update() {
+  var km       = parseFloat(document.getElementById('km').value);
+  var jours    = parseFloat(document.getElementById('jours').value);
+  var carb     = parseFloat(document.getElementById('carburant').value);
+  var conso    = parseFloat(document.getElementById('conso').value);
+
+  document.getElementById('out-km').textContent       = km + ' km';
+  document.getElementById('out-jours').textContent    = jours + ' j/sem';
+  document.getElementById('out-carburant').textContent = carb.toFixed(2).replace('.',',') + ' €';
+  document.getElementById('out-conso').textContent    = conso.toFixed(1).replace('.',',') + ' L';
+
+  var kmAn  = km * 2 * jours * 40;
+  var carbAn = (kmAn * conso / 100) * carb;
+  var entAn  = kmAn * 0.33 * 0.26;
+  var autAn  = kmAn * 0.33 * (1 - 0.30 - 0.26 - 0.23);
+
+  var acqAn = 0, totalEngage = 0, dejaEngage = 0, resteEngage = 0, infoTxt = '';
+
+  if (mode === 'achat') {
+    var prix   = parseFloat(document.getElementById('prix-achat').value);
+    var apport = parseFloat(document.getElementById('apport').value);
+    var duree  = parseFloat(document.getElementById('duree-credit').value);
+    var taux   = parseFloat(document.getElementById('taux-credit').value);
+    var moisEC = moisDepuis(document.getElementById('date-achat').value);
+    document.getElementById('out-prix-achat').textContent   = fr(prix);
+    document.getElementById('out-apport').textContent       = fr(apport);
+    document.getElementById('out-duree-credit').textContent = duree === 0 ? 'Comptant' : duree + ' mois';
+    document.getElementById('out-taux-credit').textContent  = taux.toFixed(2).replace('.',',') + ' %';
+    var capital = Math.max(0, prix - apport);
+    if (duree === 0) {
+      totalEngage = prix; acqAn = prix / 10;
+      var moisPoss = Math.min(moisEC, 120);
+      dejaEngage = apport + (capital / 120) * moisPoss;
+      resteEngage = Math.max(0, prix - dejaEngage);
+      infoTxt = 'Achat comptant de ' + fr(prix) + ' il y a ' + moisEC + ' mois. Valeur engagée estimée (10 ans) : ' + fr(dejaEngage) + '.';
+    } else {
+      var mens = mensualite(capital, taux, duree);
+      totalEngage = apport + mens * duree;
+      var moisP = Math.min(moisEC, duree);
+      dejaEngage = apport + mens * moisP; resteEngage = Math.max(0, totalEngage - dejaEngage);
+      acqAn = totalEngage / (duree / 12);
+      infoTxt = 'Mensualité : ' + fr(mens) + '/mois × ' + duree + ' mois + apport ' + fr(apport) + ' = ' + fr(totalEngage) + ' au total. ' + moisP + ' mois payés sur ' + duree + '.';
+    }
+  } else if (mode === 'leasing') {
+    var loyer = parseFloat(document.getElementById('loyer').value);
+    var premL = parseFloat(document.getElementById('premier-loyer').value);
+    var durL  = parseFloat(document.getElementById('duree-leasing').value);
+    var moisEL = moisDepuis(document.getElementById('date-leasing').value);
+    document.getElementById('out-loyer').textContent         = Math.round(loyer) + ' €/mois';
+    document.getElementById('out-premier-loyer').textContent = fr(premL);
+    document.getElementById('out-duree-leasing').textContent = durL + ' mois';
+    totalEngage = premL + loyer * durL;
+    var moisPL = Math.min(moisEL, durL);
+    dejaEngage = premL + loyer * moisPL; resteEngage = Math.max(0, totalEngage - dejaEngage);
+    acqAn = totalEngage / (durL / 12);
+    infoTxt = '1er loyer ' + fr(premL) + ' + ' + Math.round(loyer) + ' €/mois × ' + durL + ' mois = ' + fr(totalEngage) + ' total. ' + moisPL + ' mois payés sur ' + durL + '. Véhicule restitué en fin de contrat.';
+  } else {
+    infoTxt = 'Sans voiture personnelle — tous vos frais de déplacement sont à la carte.';
+  }
+
+  var totalAn = acqAn + carbAn + entAn + autAn;
+  document.getElementById('m-total-annuel').textContent = fr(totalAn);
+  document.getElementById('m-mensuel').textContent      = fr(totalAn / 12);
+  document.getElementById('m-deja-paye').textContent    = fr(dejaEngage);
+  document.getElementById('ml-engage').textContent      = mode === 'leasing' ? 'Déjà payé en loyers' : 'Déjà engagé';
+  document.getElementById('m-reste').textContent        = fr(resteEngage);
+  document.getElementById('ml-reste').textContent       = mode === 'leasing' ? 'Loyers restants' : 'Reste à rembourser';
+
+  var pct = totalEngage > 0 ? Math.min(100, Math.round(dejaEngage / totalEngage * 100)) : 0;
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-bar').className = 'prog-fill' + (pct >= 80 ? ' danger' : '');
+  document.getElementById('prog-left').textContent  = pct + '% payé';
+  document.getElementById('prog-right').textContent = 'Total engagement : ' + fr(totalEngage);
+  document.getElementById('prog-section').style.display = mode === 'none' ? 'none' : '';
+  document.getElementById('info-acq').textContent = infoTxt;
+  document.getElementById('b-acq').textContent  = fr(acqAn);
+  document.getElementById('b-carb').textContent = fr(carbAn);
+  document.getElementById('b-ent').textContent  = fr(entAn);
+  document.getElementById('b-aut').textContent  = fr(autAn);
+  document.getElementById('b-tot').textContent  = fr(totalAn);
+
+  var remboursTC = profil === 'per' ? 0.75 * 360 : 0;
+  var fmd = profil === 'per' ? 300 : 0;
+
+  var costTram = profil === 'etu' ? 20 : (360 - remboursTC);
+  var savTram = Math.max(0, totalAn - costTram);
+  document.getElementById('sav-tram').textContent = savTram > 0 ? '~' + fr(savTram) + '/an économisé' : 'Tarif comparable';
+
+  var costGrinsa = profil === 'etu' ? 36 : 0;
+  var costSolimob = 60 * 12;
+  var savVeloGrinsa = Math.max(0, totalAn - costGrinsa);
+  var savVeloSolimob = Math.max(0, totalAn - costSolimob);
+  if (document.getElementById('sv-grinsa')) document.getElementById('sv-grinsa').textContent = fr(savVeloGrinsa);
+  document.getElementById('sav-velo-grinsa') && (document.getElementById('sav-velo-grinsa').textContent = '~' + fr(savVeloGrinsa) + '/an économisé');
+  document.getElementById('sav-velo-solimob') && (document.getElementById('sav-velo-solimob').textContent = '~' + fr(savVeloSolimob) + '/an économisé');
+  document.getElementById('sav-velo-occ') && (document.getElementById('sav-velo-occ').textContent = '~' + fr(Math.max(0, totalAn - 120)) + '/an économisé');
+
+  var savCovoit = Math.round((totalAn - fmd) * 0.5);
+  document.getElementById('sav-covoit').textContent = '~' + fr(Math.max(0, savCovoit)) + '/an économisé';
+
+  var fmdTxt = profil === 'per' ? 'En tant que conducteur, vous bénéficiez aussi du Forfait Mobilités Durables (jusqu\'à 300 €/an).' : '';
+  document.getElementById('fmd-txt').textContent = fmdTxt;
+
+  var nudge = '';
+  if (km <= 5)       nudge = 'À ' + km + ' km, la marche ou le vélo sont imbattables — moins de 20 min, aucun frais fixe, zéro émission.';
+  else if (km <= 12) nudge = 'À ' + km + ' km, un VAE vous emmène au campus en moins de 35 min. Le Vebos de la BU vous permet de l\'essayer gratuitement !';
+  else if (km <= 30) nudge = 'À ' + km + ' km, le tram T1 dessert directement le campus. Le covoiturage divise la facture — et vous gagnez une place de parking dédiée.';
+  else               nudge = 'À ' + km + ' km, le covoiturage peut diviser vos coûts par 2 et vous donne accès aux places dédiées sur le campus.';
+  document.getElementById('nudge').textContent = nudge;
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tp').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.tb').forEach(function(b){ b.classList.remove('on'); });
+  document.getElementById('tab-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+
+update();
+</script>
+</body>
+</html>
