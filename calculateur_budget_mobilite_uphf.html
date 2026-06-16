@@ -1,0 +1,375 @@
+
+<style>
+  :root {
+    --uphf-blue: #008db0;
+    --uphf-blue-light: #cbdfe6;
+    --uphf-blue-dark: #005f77;
+    --uphf-gray: #49494a;
+    --uphf-gray-light: #c2c2c2;
+  }
+  .calc-wrap { font-family: var(--font-sans); padding: 0; max-width: 680px; }
+  .header-band {
+    background: var(--uphf-blue);
+    color: #fff;
+    padding: 1.25rem 1.5rem 1rem;
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    margin-bottom: 0;
+  }
+  .header-band h2 { margin: 0 0 2px; font-size: 17px; font-weight: 500; }
+  .header-band p { margin: 0; font-size: 13px; opacity: 0.85; }
+  .section-pad { padding: 1.25rem 1.5rem; }
+  .card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 12px;
+  }
+  .card-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .slider-row label { font-size: 13px; color: var(--color-text-secondary); min-width: 130px; }
+  .slider-row input[type=range] { flex: 1; accent-color: var(--uphf-blue); }
+  .slider-val {
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: right;
+    color: var(--color-text-primary);
+  }
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .metric {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-md);
+    padding: .75rem 1rem;
+    text-align: center;
+  }
+  .metric-val { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .metric-lbl { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+  .metric.accent .metric-val { color: var(--uphf-blue); }
+  .breakdown-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .breakdown-table tr td { padding: 5px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+  .breakdown-table tr:last-child td { border-bottom: none; }
+  .breakdown-table .td-right { text-align: right; font-weight: 500; }
+  .bar-container { margin-top: 4px; }
+  .bar-bg { background: var(--color-background-secondary); border-radius: 4px; height: 8px; overflow: hidden; margin-top: 4px; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width .4s ease; }
+  .alt-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: 10px;
+  }
+  .alt-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .alt-icon { font-size: 20px; color: var(--uphf-blue); }
+  .alt-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .alt-savings { margin-left: auto; background: #e0f3f8; color: var(--uphf-blue-dark); font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+  .alt-savings.dark-ok { background: var(--color-background-info); color: var(--color-text-info); }
+  .alt-body { font-size: 12.5px; color: var(--color-text-secondary); line-height: 1.6; }
+  .resource-link { color: var(--uphf-blue); text-decoration: none; border-bottom: 1px dashed var(--uphf-blue-light); }
+  .resource-link:hover { border-bottom-color: var(--uphf-blue); }
+  .tab-bar { display: flex; gap: 4px; margin-bottom: 14px; }
+  .tab-btn {
+    flex: 1; padding: 7px; background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md);
+    font-size: 13px; cursor: pointer; color: var(--color-text-secondary); transition: .2s;
+  }
+  .tab-btn.active { background: var(--uphf-blue); color: #fff; border-color: var(--uphf-blue); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .nudge-box {
+    background: #e8f6fa;
+    border-left: 3px solid var(--uphf-blue);
+    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+    padding: .75rem 1rem;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: var(--color-text-primary);
+  }
+  .tag { display: inline-block; background: var(--color-background-secondary); border-radius: 12px; font-size: 11px; padding: 2px 8px; color: var(--color-text-secondary); margin-right: 4px; }
+  .section-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 10px; }
+  select { font-size: 13px; padding: 6px 10px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: var(--color-background-primary); color: var(--color-text-primary); width: 100%; margin-bottom: 12px; }
+  .warn-band {
+    background: var(--color-background-warning);
+    color: var(--color-text-warning);
+    border-radius: var(--border-radius-md);
+    padding: .6rem 1rem;
+    font-size: 12.5px;
+    margin-bottom: 12px;
+  }
+</style>
+
+<div class="calc-wrap">
+  <div class="header-band">
+    <h2><i class="ti ti-calculator" aria-hidden="true"></i> Calculateur budget mobilité</h2>
+    <p>Université Polytechnique Hauts-de-France &mdash; Campus Mont Houy</p>
+  </div>
+
+  <div class="section-pad" style="background: var(--color-background-secondary); border-bottom: 0.5px solid var(--color-border-tertiary);">
+    <p class="section-title" style="margin-bottom: 12px;">Ma situation</p>
+
+    <div class="slider-row">
+      <label for="km">Distance domicile–campus (km aller)</label>
+      <input type="range" id="km" min="1" max="60" value="18" step="1" oninput="update()">
+      <span class="slider-val" id="km-out">18 km</span>
+    </div>
+    <div class="slider-row">
+      <label for="jours">Jours de présence / semaine</label>
+      <input type="range" id="jours" min="1" max="5" value="4" step="1" oninput="update()">
+      <span class="slider-val" id="jours-out">4 j/sem</span>
+    </div>
+    <div class="slider-row">
+      <label for="carburant">Prix carburant (€/L)</label>
+      <input type="range" id="carburant" min="1.50" max="2.20" value="1.80" step="0.05" oninput="update()">
+      <span class="slider-val" id="carburant-out">1,80 €</span>
+    </div>
+    <div class="slider-row">
+      <label for="conso">Consommation (L/100 km)</label>
+      <input type="range" id="conso" min="4" max="12" value="7" step="0.5" oninput="update()">
+      <span class="slider-val" id="conso-out">7,0 L</span>
+    </div>
+  </div>
+
+  <div class="section-pad">
+    <div class="metric-grid">
+      <div class="metric accent">
+        <div class="metric-val" id="m-annuel">—</div>
+        <div class="metric-lbl">Coût annuel voiture</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val" id="m-mensuel">—</div>
+        <div class="metric-lbl">Coût mensuel</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val" id="m-km">—</div>
+        <div class="metric-lbl">Coût / km réel*</div>
+      </div>
+      <div class="metric">
+        <div class="metric-val" id="m-km-tot">—</div>
+        <div class="metric-lbl">km/an domicile–campus</div>
+      </div>
+    </div>
+    <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0 0 16px;">* Inclut carburant, entretien, assurance, décote (source ADETEC 2022 : 33 cts/km en moyenne)</p>
+
+    <p class="section-title">Détail du coût annuel</p>
+    <table class="breakdown-table">
+      <tr>
+        <td>Carburant domicile–campus</td>
+        <td class="td-right" id="b-carb">—</td>
+      </tr>
+      <tr>
+        <td style="color: var(--color-text-secondary); font-size: 12px;">Entretien &amp; réparations (26%)</td>
+        <td class="td-right" id="b-entretien" style="color: var(--color-text-secondary); font-size: 12px;">—</td>
+      </tr>
+      <tr>
+        <td style="color: var(--color-text-secondary); font-size: 12px;">Décote / perte de valeur (23%)</td>
+        <td class="td-right" id="b-decote" style="color: var(--color-text-secondary); font-size: 12px;">—</td>
+      </tr>
+      <tr>
+        <td style="color: var(--color-text-secondary); font-size: 12px;">Assurance, stationnement, péages…</td>
+        <td class="td-right" id="b-autres" style="color: var(--color-text-secondary); font-size: 12px;">—</td>
+      </tr>
+      <tr style="font-weight: 500;">
+        <td>Total annuel estimé</td>
+        <td class="td-right" id="b-total">—</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section-pad" style="border-top: 0.5px solid var(--color-border-tertiary); padding-top: 1.25rem;">
+    <p class="section-title">Et si j'essayais autre chose ?</p>
+    <div class="nudge-box" id="nudge-text"></div>
+
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="showTab('tram')"><i class="ti ti-train" aria-hidden="true"></i> Transports</button>
+      <button class="tab-btn" onclick="showTab('velo')"><i class="ti ti-bike" aria-hidden="true"></i> Vélo</button>
+      <button class="tab-btn" onclick="showTab('covoit')"><i class="ti ti-users" aria-hidden="true"></i> Covoiturage</button>
+      <button class="tab-btn" onclick="showTab('aides')"><i class="ti ti-lifebuoy" aria-hidden="true"></i> Aides</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-tram">
+      <div class="alt-card">
+        <div class="alt-header">
+          <i class="ti ti-train alt-icon" aria-hidden="true"></i>
+          <span class="alt-title">Tramway T1 + bus (Transvilles)</span>
+          <span class="alt-savings dark-ok" id="savings-tram">—</span>
+        </div>
+        <div class="alt-body">
+          Le campus est desservi par <strong>4 stations de tramway</strong> et plusieurs lignes de bus (arrêts Famars Université, Chemin Vert, Résidence Universitaire). <br><br>
+          <strong>Pass annuel Transvilles</strong> : env. 420 €/an (ou gratuit –25 ans avec le <strong>Pass and Go SNCF + TER</strong> pour 20 € de frais de dossier).<br><br>
+          Le <strong>Simouv</strong> propose des tarifs solidaires via les CCAS.
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-velo">
+      <div class="alt-card">
+        <div class="alt-header">
+          <i class="ti ti-bike alt-icon" aria-hidden="true"></i>
+          <span class="alt-title">Vélo (classique ou électrique)</span>
+          <span class="alt-savings dark-ok" id="savings-velo">—</span>
+        </div>
+        <div class="alt-body">
+          Idéal jusqu'à ~10 km. Un <strong>vélo reconditionnée</strong> est accessible dès 600 €, un <strong>vélo à assistance électrique (VAE)</strong> à partir de ~1 500 € (ex. <a href="https://upway.fr" class="resource-link" target="_blank">upway.fr</a> pour des VAE reconditionnés).<br><br>
+          <strong>Aides disponibles :</strong> jusqu'à 400 € de bonus vélo électrique (selon revenus). Agenda des brocs à vélo et événements : <a href="https://2raventure.com/2026/02/13/evenements-velo-ou-sinformer-tester-et-passer-a-laction/" class="resource-link" target="_blank">2raventure.com</a><br><br>
+          <strong>Réparer son vélo :</strong> ateliers associatifs via <a href="https://www.heureux-cyclage.org/" class="resource-link" target="_blank">heureux-cyclage.org</a> (carte nationale). <strong>Maison du vélo d'Anzin</strong> et <strong>ADAV</strong> (Sambre Hainaut) proposent autoréparation et mise en selle. Retrouver un vélo d'occasion : <a href="https://www.facebook.com/adopteunvelo/?locale=fr_FR" class="resource-link" target="_blank">Adopte un vélo</a> (Lille).<br><br>
+          <strong>Programme Vélos Égaux :</strong> <a href="https://www.veloegaux.fr/devenir-beneficiaire/" class="resource-link" target="_blank">veloegaux.fr</a> — diagnostic, cours, accès à un vélo (France entière).
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-covoit">
+      <div class="alt-card">
+        <div class="alt-header">
+          <i class="ti ti-users alt-icon" aria-hidden="true"></i>
+          <span class="alt-title">Covoiturage</span>
+          <span class="alt-savings dark-ok" id="savings-covoit">—</span>
+        </div>
+        <div class="alt-body">
+          <strong>PassPass covoiturage</strong> (Hauts-de-France) : <a href="https://www.passpasscovoiturage.fr/" class="resource-link" target="_blank">passpasscovoiturage.fr</a><br>
+          Une communauté <strong>Valdunes / Le Poirier</strong> peut être créée sur <a href="https://passpass.fr" class="resource-link" target="_blank">passpass.fr</a> — contactez <a href="mailto:marie.godmez@associationphare.fr" class="resource-link">Solimob (Marie Godmez)</a> pour vous accompagner.<br><br>
+          En tant que conducteur, vous êtes remboursé des frais kilométriques. En tant que passager, vous divisez le coût par le nombre de covoitureurs.<br><br>
+          <span class="tag">Étude UPHF [IMP]²ULCE</span> Le covoiturage est plus efficace avec un accompagnement de l'employeur sur la logistique (29 % des salariés concernés).
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-aides">
+      <p style="font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 10px;">Aides et solutions solidaires</p>
+
+      <div class="alt-card" style="margin-bottom: 8px;">
+        <div class="alt-header">
+          <i class="ti ti-car alt-icon" aria-hidden="true"></i>
+          <span class="alt-title">Garages solidaires</span>
+        </div>
+        <div class="alt-body">
+          Entretien à tarif réduit pour les personnes en insertion ou minimas sociaux :<br>
+          • <strong>Poinfor</strong> – 1 rue Rosalie Levasseur, Valenciennes — 03 27 20 17 29<br>
+          • <strong>Garage solidaire du Hainaut</strong> (Denain) – <a href="https://www.siae-du-valenciennois.fr/garage-solidaire-du-hainaut/" class="resource-link" target="_blank">siae-du-valenciennois.fr</a><br>
+          • <strong>Norauto</strong> tarifs solidaires (-30%) via <a href="https://manaara.org/deroulement-du-programme-solidaire-mana-ara/" class="resource-link" target="_blank">Manaara</a><br>
+          • <strong>Renault Caremakers</strong> tarifs solidaires (-40%) : <a href="https://www.caremakersmobility.com/fr/offre-solidaire-entretien-et-reparation" class="resource-link" target="_blank">caremakersmobility.com</a>
+        </div>
+      </div>
+
+      <div class="alt-card" style="margin-bottom: 8px;">
+        <div class="alt-header">
+          <i class="ti ti-plug alt-icon" aria-hidden="true"></i>
+          <span class="alt-title">Leasing social voiture électrique</span>
+        </div>
+        <div class="alt-body">
+          Location d'un véhicule électrique avec prise en charge de 40% par l'État (conditions de revenus et kilométrage), disponible à partir du 30/09/2025.<br>
+          <a href="https://www.service-public.gouv.fr/particuliers/vosdroits/F39280" class="resource-link" target="_blank">service-public.fr — leasing social 2025</a> &mdash; 
+          <a href="https://www.caremakersmobility.com/fr/offre-solidaire-vehicule-neuf/offre-vehicule-neuf-dacia" class="resource-link" target="_blank">offre Dacia solidaire</a> (délai 1–3 mois)
+        </div>
+      </div>
+
+      <div class="alt-card" style="margin-bottom: 8px;">
+        <div class="alt-header">
+          <i class="ti ti-building-community alt-icon" aria-hidden="true"></i>
+          <span class="alt-title">Solimob — mobilité inclusive</span>
+        </div>
+        <div class="alt-body">
+          Location solidaire de voitures (avec et sans permis) et vélos électriques, ateliers vélo (Cambrai &amp; Anzin), accompagnement covoiturage, projet autopartage en cours.<br>
+          <a href="https://solimob.fr/location-de-vehicules/" class="resource-link" target="_blank">solimob.fr</a> &mdash; contact : <a href="mailto:marie.godmez@associationphare.fr" class="resource-link">Marie Godmez</a> — 06 84 28 22 99
+        </div>
+      </div>
+
+      <div class="alt-card" style="margin-bottom: 8px;">
+        <div class="alt-header">
+          <i class="ti ti-key alt-icon" aria-hidden="true"></i>
+          <span class="alt-title">Autopartage &amp; microcrédit</span>
+        </div>
+        <div class="alt-body">
+          <strong>Citiz Hauts-de-France</strong> : accès à des voitures en autopartage, pas trop cher – <a href="https://hauts-de-france.citiz.coop/" class="resource-link" target="_blank">hauts-de-france.citiz.coop</a><br>
+          <strong>Microcrédit mobilité</strong> (UDAF 59) : <a href="https://www.udaf59.fr/services-aux-familles/point-conseil-budget/microcredit/" class="resource-link" target="_blank">udaf59.fr</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function fmt(n){ return Math.round(n).toLocaleString('fr-FR') + ' €'; }
+function fmtKm(n){ return Math.round(n).toLocaleString('fr-FR') + ' km'; }
+
+function update(){
+  const km = +document.getElementById('km').value;
+  const jours = +document.getElementById('jours').value;
+  const carburant = +document.getElementById('carburant').value;
+  const conso = +document.getElementById('conso').value;
+
+  document.getElementById('km-out').textContent = km + ' km';
+  document.getElementById('jours-out').textContent = jours + ' j/sem';
+  document.getElementById('carburant-out').textContent = carburant.toFixed(2).replace('.',',') + ' €';
+  document.getElementById('conso-out').textContent = conso.toFixed(1).replace('.',',') + ' L';
+
+  const semaines = 40;
+  const kmAnnuelCampus = km * 2 * jours * semaines;
+  const carburantAnnuel = (kmAnnuelCampus * conso / 100) * carburant;
+
+  const coutKmTotal = 0.33;
+  const totalAnnuel = kmAnnuelCampus * coutKmTotal;
+  const entretien = totalAnnuel * 0.26;
+  const decote = totalAnnuel * 0.23;
+  const autres = totalAnnuel * (1 - 0.30 - 0.26 - 0.23);
+
+  document.getElementById('m-annuel').textContent = fmt(totalAnnuel);
+  document.getElementById('m-mensuel').textContent = fmt(totalAnnuel / 10);
+  document.getElementById('m-km').textContent = '33 cts';
+  document.getElementById('m-km-tot').textContent = fmtKm(kmAnnuelCampus);
+
+  document.getElementById('b-carb').textContent = fmt(carburantAnnuel);
+  document.getElementById('b-entretien').textContent = fmt(entretien);
+  document.getElementById('b-decote').textContent = fmt(decote);
+  document.getElementById('b-autres').textContent = fmt(autres);
+  document.getElementById('b-total').textContent = fmt(totalAnnuel);
+
+  const costTram = 420;
+  const savingsTram = Math.max(0, totalAnnuel - costTram);
+  const costVelo = 80;
+  const savingsVelo = Math.max(0, totalAnnuel - costVelo);
+  const savingsCovoit = Math.round(totalAnnuel * 0.5);
+
+  document.getElementById('savings-tram').textContent = savingsTram > 0 ? 'Économie ~' + fmt(savingsTram) + '/an' : 'Tarif similaire';
+  document.getElementById('savings-velo').textContent = savingsVelo > 0 ? 'Économie ~' + fmt(savingsVelo) + '/an' : '';
+  document.getElementById('savings-covoit').textContent = 'Économie ~' + fmt(savingsCovoit) + '/an';
+
+  let nudge = '';
+  if(km <= 5){
+    nudge = '🚶 À ' + km + ' km, la marche ou le vélo sont des alternatives très sérieuses — moins de 20 min à vélo pour rejoindre le campus.';
+  } else if(km <= 12){
+    nudge = '🚲 À ' + km + ' km, un vélo à assistance électrique vous emmène au campus en moins de 35 min, sans embouteillage ni stationnement.';
+  } else if(km <= 30){
+    nudge = '🚌 À ' + km + ' km, le tramway T1 ou le bus vous déposent directement sur le campus. Pour les jours où vous conduisez, le covoiturage divise la facture.';
+  } else {
+    nudge = '🚗 La voiture reste souvent incontournable à ' + km + ' km. Le covoiturage peut diviser vos coûts par 2. Des aides à la location solidaire existent si vous avez besoin de changer de véhicule.';
+  }
+  document.getElementById('nudge-text').textContent = nudge;
+}
+
+function showTab(id){
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.closest('.tab-btn').classList.add('active');
+}
+
+update();
+</script>
