@@ -1,0 +1,367 @@
+
+<style>
+:root { --uphf: #008db0; --uphf-dk: #005f77; --uphf-lt: #e0f3f8; }
+.cw { font-family: var(--font-sans); max-width: 680px; }
+.hband { background: var(--uphf); color: #fff; padding: 1.1rem 1.5rem .9rem; border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; }
+.hband h2 { margin: 0 0 2px; font-size: 17px; font-weight: 500; }
+.hband p { margin: 0; font-size: 12px; opacity: .8; }
+.sp { padding: 1.1rem 1.5rem; }
+.sp + .sp { border-top: 0.5px solid var(--color-border-tertiary); }
+.sec-title { font-size: 13px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 10px; }
+.sr { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+.sr label { font-size: 13px; color: var(--color-text-secondary); min-width: 160px; flex-shrink: 0; }
+.sr input[type=range] { flex: 1; accent-color: var(--uphf); }
+.sv { font-size: 13px; font-weight: 500; min-width: 80px; text-align: right; color: var(--color-text-primary); }
+.mg { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 9px; margin-bottom: 14px; }
+.mc { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: .7rem 1rem; text-align: center; }
+.mv { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+.ml { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; line-height: 1.3; }
+.mc.hi .mv { color: var(--uphf); }
+.mc.warn .mv { color: var(--color-text-warning); }
+.bt { width: 100%; border-collapse: collapse; font-size: 13px; }
+.bt tr td { padding: 5px 0; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); }
+.bt tr:last-child td { border-bottom: none; font-weight: 500; }
+.bt .tr { text-align: right; }
+.bt .dim td { color: var(--color-text-secondary); font-size: 12px; }
+.prog-wrap { margin: 4px 0 12px; }
+.prog-bg { background: var(--color-background-secondary); border-radius: 4px; height: 10px; overflow: hidden; margin-top: 4px; }
+.prog-fill { height: 100%; border-radius: 4px; background: var(--uphf); transition: width .4s; }
+.prog-fill.danger { background: #E24B4A; }
+.prog-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--color-text-secondary); margin-top: 3px; }
+.info-box { background: var(--uphf-lt); border-left: 3px solid var(--uphf); border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; padding: .7rem 1rem; margin-bottom: 12px; font-size: 13px; color: var(--color-text-primary); }
+.tgl-row { display: flex; gap: 6px; margin-bottom: 12px; }
+.tgl { flex: 1; padding: 7px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 13px; cursor: pointer; color: var(--color-text-secondary); transition: .15s; }
+.tgl.on { background: var(--uphf); color: #fff; border-color: var(--uphf); }
+.acard { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 10px; }
+.ah { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.ai { font-size: 20px; color: var(--uphf); }
+.at { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.as { margin-left: auto; background: var(--color-background-success); color: var(--color-text-success); font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+.ab { font-size: 12.5px; color: var(--color-text-secondary); line-height: 1.6; }
+.rl { color: var(--uphf); text-decoration: none; border-bottom: 1px dashed; }
+.tbr { display: flex; gap: 4px; margin-bottom: 12px; }
+.tb { flex: 1; padding: 7px 4px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); font-size: 12px; cursor: pointer; color: var(--color-text-secondary); transition: .15s; text-align: center; }
+.tb.on { background: var(--uphf); color: #fff; border-color: var(--uphf); }
+.tp { display: none; }
+.tp.on { display: block; }
+</style>
+
+<div class="cw">
+<h2 class="sr-only">Calculateur budget mobilité UPHF — coût réel de la voiture et alternatives</h2>
+
+<div class="hband">
+  <h2><i class="ti ti-calculator" aria-hidden="true"></i> Calculateur budget mobilité</h2>
+  <p>Université Polytechnique Hauts-de-France &mdash; Campus Mont Houy</p>
+</div>
+
+<div class="sp" style="background: var(--color-background-secondary);">
+  <div class="sec-title">Mon véhicule</div>
+
+  <div class="tgl-row">
+    <button class="tgl on" id="tgl-achat" onclick="setMode('achat')"><i class="ti ti-receipt" aria-hidden="true"></i> Achat comptant / crédit</button>
+    <button class="tgl" id="tgl-leasing" onclick="setMode('leasing')"><i class="ti ti-rotate" aria-hidden="true"></i> Leasing / LLD</button>
+    <button class="tgl" id="tgl-none" onclick="setMode('none')"><i class="ti ti-car-off" aria-hidden="true"></i> Pas de voiture</button>
+  </div>
+
+  <div id="panel-achat">
+    <div class="sr">
+      <label for="prix-achat">Prix d'achat du véhicule</label>
+      <input type="range" id="prix-achat" min="500" max="40000" step="500" value="14000" oninput="update()">
+      <span class="sv" id="out-prix-achat">14 000 €</span>
+    </div>
+    <div class="sr">
+      <label for="apport">Apport personnel</label>
+      <input type="range" id="apport" min="0" max="15000" step="500" value="2000" oninput="update()">
+      <span class="sv" id="out-apport">2 000 €</span>
+    </div>
+    <div class="sr">
+      <label for="duree-credit">Durée du crédit (mois)</label>
+      <input type="range" id="duree-credit" min="0" max="84" step="6" value="48" oninput="update()">
+      <span class="sv" id="out-duree-credit">48 mois</span>
+    </div>
+    <div class="sr">
+      <label for="taux-credit">Taux annuel crédit (%)</label>
+      <input type="range" id="taux-credit" min="0" max="12" step="0.25" value="5" oninput="update()">
+      <span class="sv" id="out-taux-credit">5,00 %</span>
+    </div>
+    <div class="sr">
+      <label for="date-achat">Date d'achat</label>
+      <input type="month" id="date-achat" value="2022-09" oninput="update()" style="flex:1;">
+    </div>
+  </div>
+
+  <div id="panel-leasing" style="display:none;">
+    <div class="sr">
+      <label for="loyer">Loyer mensuel LLD/LOA</label>
+      <input type="range" id="loyer" min="100" max="800" step="10" value="280" oninput="update()">
+      <span class="sv" id="out-loyer">280 €/mois</span>
+    </div>
+    <div class="sr">
+      <label for="premier-loyer">1er loyer majoré</label>
+      <input type="range" id="premier-loyer" min="0" max="5000" step="100" value="1000" oninput="update()">
+      <span class="sv" id="out-premier-loyer">1 000 €</span>
+    </div>
+    <div class="sr">
+      <label for="duree-leasing">Durée du contrat (mois)</label>
+      <input type="range" id="duree-leasing" min="12" max="60" step="6" value="36" oninput="update()">
+      <span class="sv" id="out-duree-leasing">36 mois</span>
+    </div>
+    <div class="sr">
+      <label for="date-leasing">Date de début</label>
+      <input type="month" id="date-leasing" value="2023-06" oninput="update()" style="flex:1;">
+    </div>
+  </div>
+</div>
+
+<div class="sp" style="background: var(--color-background-secondary); border-top: 0.5px solid var(--color-border-tertiary);">
+  <div class="sec-title">Mon trajet domicile–campus</div>
+  <div class="sr">
+    <label for="km">Distance aller (km)</label>
+    <input type="range" id="km" min="1" max="60" step="1" value="18" oninput="update()">
+    <span class="sv" id="out-km">18 km</span>
+  </div>
+  <div class="sr">
+    <label for="jours">Jours présents / semaine</label>
+    <input type="range" id="jours" min="1" max="5" step="1" value="4" oninput="update()">
+    <span class="sv" id="out-jours">4 j/sem</span>
+  </div>
+  <div class="sr">
+    <label for="carburant">Prix carburant (€/L)</label>
+    <input type="range" id="carburant" min="1.50" max="2.20" step="0.05" value="1.80" oninput="update()">
+    <span class="sv" id="out-carburant">1,80 €</span>
+  </div>
+  <div class="sr">
+    <label for="conso">Consommation (L/100 km)</label>
+    <input type="range" id="conso" min="4" max="12" step="0.5" value="7" oninput="update()">
+    <span class="sv" id="out-conso">7,0 L</span>
+  </div>
+</div>
+
+<div class="sp">
+  <div class="sec-title" style="margin-bottom:12px;">Coût global de ma voiture</div>
+
+  <div class="mg">
+    <div class="mc hi">
+      <div class="mv" id="m-total-annuel">—</div>
+      <div class="ml">Coût annuel total</div>
+    </div>
+    <div class="mc">
+      <div class="mv" id="m-mensuel">—</div>
+      <div class="ml">Par mois</div>
+    </div>
+    <div class="mc warn">
+      <div class="mv" id="m-deja-paye">—</div>
+      <div class="ml" id="ml-engage">Déjà engagé</div>
+    </div>
+    <div class="mc">
+      <div class="mv" id="m-reste">—</div>
+      <div class="ml" id="ml-reste">Reste à payer</div>
+    </div>
+  </div>
+
+  <div id="prog-section" class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="prog-bar" style="width:0%"></div></div>
+    <div class="prog-label"><span id="prog-left">Payé</span><span id="prog-right">Engagement total</span></div>
+  </div>
+
+  <div class="info-box" id="info-acq"></div>
+
+  <table class="bt">
+    <tr><td>Acquisition (annualisé)</td><td class="tr" id="b-acq">—</td></tr>
+    <tr class="dim"><td>&nbsp;&nbsp;Carburant domicile–campus</td><td class="tr" id="b-carb">—</td></tr>
+    <tr class="dim"><td>&nbsp;&nbsp;Entretien &amp; réparations</td><td class="tr" id="b-ent">—</td></tr>
+    <tr class="dim"><td>&nbsp;&nbsp;Assurance, stationnement, péages…</td><td class="tr" id="b-aut">—</td></tr>
+    <tr><td>Total annuel estimé</td><td class="tr" id="b-tot">—</td></tr>
+  </table>
+</div>
+
+<div class="sp" style="border-top: 0.5px solid var(--color-border-tertiary);">
+  <div class="sec-title" style="margin-bottom:10px;">Et si j'essayais autre chose ?</div>
+  <div class="info-box" id="nudge"></div>
+
+  <div class="tbr">
+    <button class="tb on" onclick="showTab('tram',this)"><i class="ti ti-train" aria-hidden="true"></i> Transports</button>
+    <button class="tb" onclick="showTab('velo',this)"><i class="ti ti-bike" aria-hidden="true"></i> Vélo</button>
+    <button class="tb" onclick="showTab('covoit',this)"><i class="ti ti-users" aria-hidden="true"></i> Covoiturage</button>
+    <button class="tb" onclick="showTab('aides',this)"><i class="ti ti-lifebuoy" aria-hidden="true"></i> Aides</button>
+  </div>
+
+  <div class="tp on" id="tab-tram">
+    <div class="acard">
+      <div class="ah"><i class="ti ti-train ai" aria-hidden="true"></i><span class="at">Tramway T1 + bus (Transvilles)</span><span class="as" id="sav-tram">—</span></div>
+      <div class="ab">Le campus est desservi par <strong>4 stations de tramway</strong> et plusieurs lignes de bus. Pass annuel Transvilles env. 420 €/an, ou gratuit –25 ans avec le <strong>Pass and Go SNCF+TER</strong> (20 € de frais). Le <strong>Simouv</strong> propose des tarifs solidaires via les CCAS.</div>
+    </div>
+  </div>
+  <div class="tp" id="tab-velo">
+    <div class="acard">
+      <div class="ah"><i class="ti ti-bike ai" aria-hidden="true"></i><span class="at">Vélo / VAE</span><span class="as" id="sav-velo">—</span></div>
+      <div class="ab">Vélo classique reconditionné dès 600 €, VAE à partir de ~1 500 € (<a class="rl" href="https://upway.fr" target="_blank">upway.fr</a>). Ateliers de réparation : <a class="rl" href="https://www.heureux-cyclage.org/" target="_blank">heureux-cyclage.org</a> (carte nationale), Maison du vélo d'Anzin (Sambre Hainaut). Programme <a class="rl" href="https://www.veloegaux.fr/devenir-beneficiaire/" target="_blank">Vélos Égaux</a> (diagnostic + cours + accès à un vélo). Évènements vélo : <a class="rl" href="https://2raventure.com/2026/02/13/evenements-velo-ou-sinformer-tester-et-passer-a-laction/" target="_blank">2raventure.com</a></div>
+    </div>
+  </div>
+  <div class="tp" id="tab-covoit">
+    <div class="acard">
+      <div class="ah"><i class="ti ti-users ai" aria-hidden="true"></i><span class="at">Covoiturage</span><span class="as" id="sav-covoit">—</span></div>
+      <div class="ab"><a class="rl" href="https://www.passpasscovoiturage.fr/" target="_blank">PassPass covoiturage</a> (Hauts-de-France). Communauté Valdunes/Le Poirier à créer sur <a class="rl" href="https://passpass.fr" target="_blank">passpass.fr</a> — contact Solimob : <a class="rl" href="mailto:marie.godmez@associationphare.fr">Marie Godmez</a> — 06 84 28 22 99. En tant que conducteur, vous êtes remboursé des frais. En passager, vous divisez la note par le nombre de covoitureurs.</div>
+    </div>
+  </div>
+  <div class="tp" id="tab-aides">
+    <div class="acard" style="margin-bottom:8px;">
+      <div class="ah"><i class="ti ti-tool ai" aria-hidden="true"></i><span class="at">Garages solidaires</span></div>
+      <div class="ab"><strong>Poinfor</strong> – 1 rue Rosalie Levasseur, Valenciennes — 03 27 20 17 29 &bull; <a class="rl" href="https://www.siae-du-valenciennois.fr/garage-solidaire-du-hainaut/" target="_blank">Garage solidaire du Hainaut</a> (Denain) &bull; <a class="rl" href="https://manaara.org/deroulement-du-programme-solidaire-mana-ara/" target="_blank">Norauto −30%</a> &bull; <a class="rl" href="https://www.caremakersmobility.com/fr/offre-solidaire-entretien-et-reparation" target="_blank">Renault Caremakers −40%</a></div>
+    </div>
+    <div class="acard" style="margin-bottom:8px;">
+      <div class="ah"><i class="ti ti-plug ai" aria-hidden="true"></i><span class="at">Leasing social voiture électrique</span></div>
+      <div class="ab">40 % pris en charge par l'État, à partir du 30/09/2025, sous conditions de revenus. <a class="rl" href="https://www.service-public.gouv.fr/particuliers/vosdroits/F39280" target="_blank">service-public.fr</a> &mdash; <a class="rl" href="https://www.caremakersmobility.com/fr/offre-solidaire-vehicule-neuf/offre-vehicule-neuf-dacia" target="_blank">offre Dacia solidaire</a></div>
+    </div>
+    <div class="acard">
+      <div class="ah"><i class="ti ti-building-community ai" aria-hidden="true"></i><span class="at">Solimob &amp; autopartage</span></div>
+      <div class="ab"><a class="rl" href="https://solimob.fr/location-de-vehicules/" target="_blank">Solimob</a> : location solidaire voitures (avec/sans permis) et VAE, ateliers vélo. <a class="rl" href="https://hauts-de-france.citiz.coop/" target="_blank">Citiz Hauts-de-France</a> : autopartage. Microcrédit mobilité : <a class="rl" href="https://www.udaf59.fr/services-aux-familles/point-conseil-budget/microcredit/" target="_blank">UDAF 59</a></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+let mode = 'achat';
+
+function setMode(m) {
+  mode = m;
+  ['achat','leasing','none'].forEach(x => document.getElementById('tgl-'+x).classList.toggle('on', x===m));
+  document.getElementById('panel-achat').style.display = m==='achat' ? '' : 'none';
+  document.getElementById('panel-leasing').style.display = m==='leasing' ? '' : 'none';
+  update();
+}
+
+function moisDepuis(val) {
+  if (!val) return 0;
+  const [y, mo] = val.split('-').map(Number);
+  const now = new Date();
+  return Math.max(0, (now.getFullYear() - y) * 12 + (now.getMonth() + 1 - mo));
+}
+
+function fr(n) { return Math.round(n).toLocaleString('fr-FR') + ' €'; }
+
+function mensualite(capital, tauxAn, nbMois) {
+  if (nbMois === 0) return 0;
+  if (tauxAn === 0) return capital / nbMois;
+  const tm = tauxAn / 100 / 12;
+  return capital * tm * Math.pow(1+tm, nbMois) / (Math.pow(1+tm, nbMois) - 1);
+}
+
+function update() {
+  const km = +document.getElementById('km').value;
+  const jours = +document.getElementById('jours').value;
+  const carburant = +document.getElementById('carburant').value;
+  const conso = +document.getElementById('conso').value;
+
+  document.getElementById('out-km').textContent = km + ' km';
+  document.getElementById('out-jours').textContent = jours + ' j/sem';
+  document.getElementById('out-carburant').textContent = carburant.toFixed(2).replace('.',',') + ' €';
+  document.getElementById('out-conso').textContent = conso.toFixed(1).replace('.',',') + ' L';
+
+  const kmAn = km * 2 * jours * 40;
+  const carbAn = (kmAn * conso / 100) * carburant;
+  const entretienAn = kmAn * 0.33 * 0.26;
+  const autresAn = kmAn * 0.33 * (1 - 0.30 - 0.26 - 0.23);
+
+  let acqAn = 0, totalEngage = 0, dejaEngage = 0, resteEngage = 0, infoTxt = '';
+
+  if (mode === 'achat') {
+    const prix = +document.getElementById('prix-achat').value;
+    const apport = +document.getElementById('apport').value;
+    const duree = +document.getElementById('duree-credit').value;
+    const taux = +document.getElementById('taux-credit').value;
+    const moisEcoules = moisDepuis(document.getElementById('date-achat').value);
+
+    document.getElementById('out-prix-achat').textContent = fr(prix);
+    document.getElementById('out-apport').textContent = fr(Math.min(apport, prix));
+    document.getElementById('out-duree-credit').textContent = duree === 0 ? 'Comptant' : duree + ' mois';
+    document.getElementById('out-taux-credit').textContent = taux.toFixed(2).replace('.',',') + ' %';
+
+    const capital = Math.max(0, prix - apport);
+    if (duree === 0) {
+      const dureeVie = 120;
+      acqAn = prix / 10;
+      totalEngage = prix;
+      const moisPoss = Math.min(moisEcoules, dureeVie);
+      dejaEngage = Math.min(prix, (prix / dureeVie) * moisPoss + Math.min(apport, prix));
+      resteEngage = Math.max(0, prix - dejaEngage);
+      infoTxt = 'Achat comptant de ' + fr(prix) + ' il y a ' + moisEcoules + ' mois. Valeur consommée estimée (durée de vie 10 ans) : ' + fr(dejaEngage) + '.';
+    } else {
+      const mens = mensualite(capital, taux, duree);
+      totalEngage = apport + mens * duree;
+      acqAn = totalEngage / (duree / 12);
+      const moisPayes = Math.min(moisEcoules, duree);
+      dejaEngage = apport + mens * moisPayes;
+      resteEngage = Math.max(0, totalEngage - dejaEngage);
+      infoTxt = 'Mensualité : ' + fr(mens) + '/mois × ' + duree + ' mois + apport ' + fr(apport) + ' = ' + fr(totalEngage) + ' total. ' + moisPayes + ' mois payés sur ' + duree + '.';
+    }
+
+  } else if (mode === 'leasing') {
+    const loyer = +document.getElementById('loyer').value;
+    const premierLoyer = +document.getElementById('premier-loyer').value;
+    const duree = +document.getElementById('duree-leasing').value;
+    const moisEcoules = moisDepuis(document.getElementById('date-leasing').value);
+
+    document.getElementById('out-loyer').textContent = fr(loyer) + '/mois';
+    document.getElementById('out-premier-loyer').textContent = fr(premierLoyer);
+    document.getElementById('out-duree-leasing').textContent = duree + ' mois';
+
+    totalEngage = premierLoyer + loyer * duree;
+    acqAn = totalEngage / (duree / 12);
+    const moisPayes = Math.min(moisEcoules, duree);
+    dejaEngage = premierLoyer + loyer * moisPayes;
+    resteEngage = Math.max(0, totalEngage - dejaEngage);
+    infoTxt = '1er loyer ' + fr(premierLoyer) + ' + ' + fr(loyer) + '/mois × ' + duree + ' mois = ' + fr(totalEngage) + ' total. ' + moisPayes + ' mois payés sur ' + duree + '. Véhicule restitué en fin de contrat.';
+
+  } else {
+    infoTxt = 'Sans voiture personnelle — tous vos frais de déplacement sont à la carte.';
+  }
+
+  const totalAn = acqAn + carbAn + entretienAn + autresAn;
+
+  document.getElementById('m-total-annuel').textContent = fr(totalAn);
+  document.getElementById('m-mensuel').textContent = fr(totalAn / 12);
+  document.getElementById('m-deja-paye').textContent = fr(dejaEngage);
+  document.getElementById('ml-engage').textContent = mode === 'leasing' ? 'Déjà payé en loyers' : 'Déjà payé';
+  document.getElementById('m-reste').textContent = fr(resteEngage);
+  document.getElementById('ml-reste').textContent = mode === 'leasing' ? 'Loyers restants' : 'Reste à rembourser';
+
+  const pct = totalEngage > 0 ? Math.min(100, Math.round(dejaEngage / totalEngage * 100)) : 100;
+  document.getElementById('prog-bar').style.width = pct + '%';
+  document.getElementById('prog-bar').className = 'prog-fill' + (pct >= 80 ? ' danger' : '');
+  document.getElementById('prog-left').textContent = pct + '% payé';
+  document.getElementById('prog-right').textContent = 'Total : ' + fr(totalEngage);
+  document.getElementById('prog-section').style.display = mode === 'none' ? 'none' : '';
+
+  document.getElementById('info-acq').textContent = infoTxt;
+  document.getElementById('b-acq').textContent = fr(acqAn);
+  document.getElementById('b-carb').textContent = fr(carbAn);
+  document.getElementById('b-ent').textContent = fr(entretienAn);
+  document.getElementById('b-aut').textContent = fr(autresAn);
+  document.getElementById('b-tot').textContent = fr(totalAn);
+
+  const savTram = Math.max(0, totalAn - 420);
+  const savVelo = Math.max(0, totalAn - 80);
+  const savCovoit = Math.round(totalAn * 0.5);
+  document.getElementById('sav-tram').textContent = savTram > 0 ? '~' + fr(savTram) + '/an économisé' : 'Tarif comparable';
+  document.getElementById('sav-velo').textContent = savVelo > 0 ? '~' + fr(savVelo) + '/an économisé' : '';
+  document.getElementById('sav-covoit').textContent = '~' + fr(savCovoit) + '/an économisé';
+
+  let nudge = '';
+  if (km <= 5) nudge = 'À ' + km + ' km, la marche ou le vélo sont des alternatives très sérieuses — moins de 20 min à vélo, aucun frais fixe.';
+  else if (km <= 12) nudge = 'À ' + km + ' km, un vélo à assistance électrique vous emmène au campus en moins de 35 min, sans embouteillage ni stationnement.';
+  else if (km <= 30) nudge = 'À ' + km + ' km, le tramway T1 ou le bus desservent directement le campus. Le covoiturage divise la facture les jours où vous roulez.';
+  else nudge = 'À ' + km + ' km, la voiture reste souvent nécessaire. Le covoiturage peut diviser vos coûts par 2. Des aides à la location solidaire existent si vous souhaitez changer de véhicule.';
+  document.getElementById('nudge').textContent = nudge;
+}
+
+function showTab(id, btn) {
+  document.querySelectorAll('.tp').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-' + id).classList.add('on');
+  btn.classList.add('on');
+}
+
+update();
+</script>
