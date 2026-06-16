@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;font-size:14px;color:#1a1a1a;background:#fff;line-height:1.5}
+a{color:#007a9e;text-decoration:none;border-bottom:1px dashed #007a9e}
+a:hover{border-bottom-style:solid}
+strong{font-weight:600}
+ul{padding-left:16px}
+li{margin-bottom:3px}
+
+/* Layout */
+.shell{border:1px solid #ddd;border-radius:10px;overflow:hidden;max-width:680px}
+
+/* Hero */
+.hero{background:#008db0;color:#fff;padding:18px 22px 16px}
+.hero-title{font-size:18px;font-weight:600;margin-bottom:3px}
+.hero-sub{font-size:12px;opacity:.8;margin-bottom:14px}
+.prf-row{display:flex;gap:8px}
+.prf-btn{flex:1;padding:8px 10px;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);border-radius:8px;color:rgba(255,255,255,.9);font-size:13px;font-weight:500;cursor:pointer;font-family:inherit;transition:.15s}
+.prf-btn.on{background:#fff;color:#008db0;border-color:#fff;font-weight:700}
+
+/* Distance bar */
+.km-bar{background:#f5f5f5;border-bottom:1px solid #e0e0e0;padding:12px 22px;display:flex;align-items:center;gap:12px}
+.km-bar label{font-size:13px;color:#555;white-space:nowrap;flex-shrink:0}
+.km-bar input[type=range]{flex:1;accent-color:#008db0;cursor:pointer}
+.km-val{font-size:15px;font-weight:600;min-width:52px;text-align:right;color:#1a1a1a}
+
+/* Mode nav */
+.mode-grid{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid #e0e0e0}
+.mb{padding:11px 4px 9px;background:#fff;border:none;border-right:1px solid #e0e0e0;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:4px;transition:.15s;color:#666}
+.mb:last-child{border-right:none}
+.mb .mi{font-size:20px}
+.mb .ml{font-size:11px;font-weight:500}
+.mb.on{background:#f0f9fc;color:#008db0;border-bottom:2.5px solid #008db0}
+.mb:hover:not(.on){background:#f5f5f5}
+
+/* Panel */
+.panel{background:#fff}
+.sec{padding:18px 22px;border-bottom:1px solid #e8e8e8}
+.sec:last-child{border-bottom:none}
+
+/* Nudge / info boxes */
+.nudge{background:#e0f3f8;border-left:3px solid #008db0;border-radius:0 6px 6px 0;padding:10px 14px;font-size:13px;color:#00394f;margin-bottom:14px}
+.air-box{background:#fef9e7;border-left:3px solid #e67e22;border-radius:0 6px 6px 0;padding:9px 14px;font-size:12.5px;color:#7d4c00;margin-top:12px}
+.bonus-box{background:#e6f4ec;border:1px solid #b7e5c9;border-radius:8px;padding:10px 14px;font-size:13px;color:#1a5c34;margin:12px 0}
+
+/* Metrics */
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.mc{background:#f5f5f5;border-radius:8px;padding:10px 12px}
+.mc .num{font-size:19px;font-weight:700;color:#008db0;line-height:1.15}
+.mc .lbl{font-size:11px;color:#666;margin-top:2px}
+
+/* Section title */
+.stitle{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:10px}
+.sintro{font-size:13px;color:#555;margin-bottom:12px}
+
+/* Cards */
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:#fff;border:1px solid #ddd;border-radius:10px;padding:12px 16px}
+.card.featured{border:2px solid #008db0}
+.ch{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.cicon{font-size:20px;color:#008db0;flex-shrink:0}
+.cname{font-size:14px;font-weight:600;color:#1a1a1a}
+.cprice{margin-left:auto;font-size:13px;font-weight:700;color:#1a5c34;white-space:nowrap;background:#e6f4ec;padding:2px 10px;border-radius:20px}
+.cprice.free{background:#dcfce7;color:#14532d}
+.cbody{font-size:12.5px;color:#555;line-height:1.65}
+
+/* Badges */
+.bdg{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-right:4px;vertical-align:middle}
+.b-etu{background:#dbeafe;color:#1e3a8a}
+.b-per{background:#fce7f3;color:#831843}
+.b-all{background:#d1fae5;color:#064e3b}
+.b-free{background:#dcfce7;color:#14532d}
+
+/* Tags */
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:4px}
+.t-blue{background:#e0f3f8;color:#005f77}
+.t-purple{background:#ede9fe;color:#4c1d95}
+.t-green{background:#d1fae5;color:#064e3b}
+
+/* Savings bars */
+.sbar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sbar-lbl{font-size:12px;color:#555;min-width:140px;flex-shrink:0}
+.sbar-bg{flex:1;height:9px;background:#e0e0e0;border-radius:5px;overflow:hidden}
+.sbar-fill{height:100%;background:#1a5c34;border-radius:5px;transition:width .5s}
+.sbar-val{font-size:12px;font-weight:700;color:#1a5c34;min-width:72px;text-align:right}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div class="hero">
+  <div class="hero-title">&#x1F4CD; Boîte à outils mobilité UPHF</div>
+  <div class="hero-sub">Campus Mont Houy · Aulnoy-lez-Valenciennes</div>
+  <div class="prf-row">
+    <button class="prf-btn on" id="pb-etu" onclick="setProfil('etu')">&#127979; Étudiant·e</button>
+    <button class="prf-btn" id="pb-per" onclick="setProfil('per')">&#128188; Personnel</button>
+  </div>
+</div>
+
+<div class="km-bar">
+  <label for="kms">&#127968; Distance domicile – campus</label>
+  <input type="range" id="kms" min="1" max="60" step="1" value="15" oninput="onKm()">
+  <span class="km-val" id="km-out">15 km</span>
+</div>
+
+<div class="mode-grid">
+  <button class="mb on" id="mb-velo" onclick="setMode('velo')"><span class="mi">&#128690;</span><span class="ml">Vélo</span></button>
+  <button class="mb" id="mb-tram" onclick="setMode('tram')"><span class="mi">&#128653;</span><span class="ml">Transports</span></button>
+  <button class="mb" id="mb-covoit" onclick="setMode('covoit')"><span class="mi">&#128101;</span><span class="ml">Covoiturage</span></button>
+  <button class="mb" id="mb-car" onclick="setMode('car')"><span class="mi">&#128664;</span><span class="ml">Voiture seul</span></button>
+  <button class="mb" id="mb-aides" onclick="setMode('aides')"><span class="mi">&#128142;</span><span class="ml">Aides</span></button>
+</div>
+
+<div class="panel" id="panel"></div>
+
+</div>
+
+<script>
+var profil='etu', mode='velo', km=15;
+
+function setProfil(p){
+  profil=p;
+  document.getElementById('pb-etu').classList.toggle('on',p==='etu');
+  document.getElementById('pb-per').classList.toggle('on',p==='per');
+  render();
+}
+function setMode(m){
+  mode=m;
+  ['velo','tram','covoit','car','aides'].forEach(function(x){
+    document.getElementById('mb-'+x).classList.toggle('on',x===m);
+  });
+  render();
+}
+function onKm(){
+  km=parseInt(document.getElementById('kms').value);
+  document.getElementById('km-out').textContent=km+' km';
+  render();
+}
+function fr(n){return Math.round(n).toLocaleString('fr-FR')+'\u00a0€';}
+function frt(min){return min<60?min+'\u00a0min':Math.floor(min/60)+'h'+(min%60?('0'+min%60).slice(-2):'');}
+function carAn(){return Math.round(km*2*4*40*0.33);}
+
+function card(featured,icon,name,price,priceClass,body){
+  return '<div class="card'+(featured?' featured':'')+'"><div class="ch"><span class="cicon">'+icon+'</span><span class="cname">'+name+'</span>'+(price?'<span class="cprice'+(priceClass?' '+priceClass:'')+'">'+ price+'</span>':'')+'</div><div class="cbody">'+body+'</div></div>';
+}
+function metric(num,lbl){return '<div class="mc"><div class="num">'+num+'</div><div class="lbl">'+lbl+'</div></div>';}
+
+function render(){
+  var annuel=carAn();
+  var h='';
+
+  if(mode==='velo'){
+    var tmin=Math.round(km/15*60);
+    var tvae=Math.round(km/22*60);
+    var nudge='';
+    if(km<=3) nudge='À '+km+'\u00a0km, la marche ou le vélo suffisent — moins de 10\u00a0min, aucun frais, zéro émission.';
+    else if(km<=8) nudge='À '+km+'\u00a0km, un vélo classique vous amène en '+frt(tmin)+'. Le Vebos de la BU vous permet de tester le VAE gratuitement !';
+    else if(km<=15) nudge='À '+km+'\u00a0km, le VAE est idéal\u00a0: '+frt(tvae)+' de trajet, sans sueur, sans parking.';
+    else if(km<=25) nudge='À '+km+'\u00a0km, le VAE reste envisageable ('+frt(tvae)+'). Solimob propose la location à 60\u00a0€/mois.';
+    else nudge='À '+km+'\u00a0km, pensez à combiner vélo + tram pour les portions courtes, ou au covoiturage.';
+
+    h+='<div class="sec"><div class="nudge">'+nudge+'</div>';
+    h+='<div class="metrics">';
+    h+=metric(frt(tmin),'Trajet à vélo classique');
+    h+=metric(frt(tvae),'Trajet en VAE');
+    h+=metric(fr(Math.max(0,annuel-36)),'Économie vs voiture seul*');
+    h+='</div>';
+    h+='<div class="cards">';
+
+    if(profil==='etu'){
+      h+=card(true,'&#9889;','Vebos – VAE gratuit à la BU','Gratuit','free','<span class="bdg b-etu">Étudiant·e</span> Vélo à assistance électrique (kit Vebos) en <strong>prêt gratuit</strong> à la Bibliothèque universitaire du campus Mont Houy. Idéal pour essayer sans engagement.');
+      h+=card(true,'&#127381;','Grinsa – vélo reconditionné','3\u00a0€/mois','','<span class="bdg b-etu">Étudiant·e</span> Location longue durée d\'un vélo reconditionné entretenu. <strong>36\u00a0€/an</strong>, entretien inclus. <a href="https://www.grinsa.fr/" target="_blank">grinsa.fr</a>');
+      h+=card(false,'&#128690;','Vélo d\'occasion – Maison du vélo','~120\u00a0€','','<span class="bdg b-all">Tous</span> Achat d\'un vélo en bon état à la Maison du vélo de Valenciennes. Ateliers de réparation et accompagnement inclus.');
+    }
+    if(profil==='per'){
+      h+=card(true,'&#9889;','Flotte VAE reconditionnés UPHF','Personnel','','<span class="bdg b-per">Personnel</span> Vélos électriques reconditionnés disponibles sur le campus. Renseignements\u00a0: <strong>Angelina &amp; Bertrand</strong> (service mobilité UPHF).');
+      h+=card(true,'&#128176;','Forfait Mobilités Durables – vélo','Jusqu\'à 300\u00a0€/an','','<span class="bdg b-per">Personnel</span> L\'UPHF rembourse jusqu\'à <strong>300\u00a0€/an</strong> pour les trajets domicile–travail à vélo. Exonéré d\'impôts et de cotisations. <a href="https://numerique.uphf.fr/services/covoiturage" target="_blank">numerique.uphf.fr</a>');
+    }
+    h+=card(false,'&#128690;','Solimob – VAE en location solidaire','60\u00a0€/mois','','<span class="bdg b-all">Tous</span> Location d\'un vélo à assistance électrique avec accompagnement. Ateliers vélo à Cambrai et Anzin. <a href="https://solimob.fr/location-de-vehicules/" target="_blank">solimob.fr</a>');
+    h+=card(false,'&#128660;','Donkey Bike – vélos libre-service','À la course','','<span class="bdg b-all">Tous</span> Vélos (classiques et électriques) à la demande dans le Valenciennois. Parfait pour les trajets ponctuels ou pour tester avant d\'investir. <a href="https://www.donkey.bike/fr" target="_blank">donkey.bike/fr</a>');
+    h+=card(false,'&#128295;','Apprendre à réparer son vélo','','','<span class="bdg b-all">Tous</span><ul><li><strong>Heureux Cyclage</strong> – carte des ateliers associatifs\u00a0: <a href="https://www.heureux-cyclage.org/" target="_blank">heureux-cyclage.org</a></li><li><strong>Vélos Égaux</strong> – programme gratuit (cours + accès à un vélo)\u00a0: <a href="https://www.veloegaux.fr/devenir-beneficiaire/" target="_blank">veloegaux.fr</a></li><li>Évènements vélo (brocs, initiations)\u00a0: <a href="https://2raventure.com/2026/02/13/evenements-velo-ou-sinformer-tester-et-passer-a-laction/" target="_blank">2raventure.com</a></li></ul>');
+    h+='</div>';
+    h+='<p style="font-size:11px;color:#888;margin-top:10px;">* Économie calculée vs voiture seul (33\u00a0cts/km, source ADETEC 2022), option Grinsa 36\u00a0€/an.</p>';
+    h+='<div class="air-box">&#127807; <strong>Qualité de l\'air\u00a0:</strong> le vélo émet zéro particule fine. Dans les Hauts-de-France, la pollution de l\'air est associée à des milliers de décès prématurés chaque année. Chaque trajet à vélo compte — pour vous et pour vos voisins.</div>';
+    h+='</div>';
+  }
+
+  else if(mode==='tram'){
+    var costTram=profil==='etu'?20:90;
+    var savTram=Math.max(0,annuel-costTram);
+    h+='<div class="sec"><div class="nudge">Le campus est desservi par <strong>4 stations de tramway T1</strong> (Famars Université, Chemin Vert, Résidence Universitaire) et plusieurs lignes de bus. Départ toutes les quelques minutes en heures de pointe.</div>';
+    h+='<div class="metrics">';
+    h+=metric(profil==='etu'?'20\u00a0€ de frais':'~90\u00a0€ nets/an','Coût abonnement');
+    h+=metric(fr(savTram),'Économie vs voiture seul');
+    h+=metric('0\u00a0€','Frais de stationnement');
+    h+='</div><div class="cards">';
+    if(profil==='etu'){
+      h+=card(true,'&#11088;','Pass&amp;Go – tram + bus + TER illimité','20\u00a0€ frais','free','<span class="bdg b-etu">&lt;25 ans</span> Abonnement annuel illimité (tram + bus Transvilles + TER régional) pour seulement <strong>20\u00a0€ de frais de dossier</strong>. Valable du 1er sept. au 31 août. Demande en ligne. <a href="https://www.transvilles.com/votre-abonnement-passgo/" target="_blank">transvilles.com</a>');
+    }
+    if(profil==='per'){
+      h+=card(true,'&#128181;','Remboursement 75\u00a0% employeur','~90\u00a0€ nets/an','','<span class="bdg b-per">Personnel</span> L\'UPHF prend en charge <strong>75\u00a0% de l\'abonnement</strong> de transport en commun. Le Pass Elit annuel (360\u00a0€) ne vous coûte que <strong>~90\u00a0€</strong>. Démarche via les RH.');
+      h+=card(false,'&#127915;','Pass Elit – abonnement annuel','360\u00a0€/an','','<span class="bdg b-per">Personnel</span> Abonnement annuel illimité sur le réseau Transvilles (tram + bus), soit 30\u00a0€/mois avant remboursement employeur.');
+    }
+    h+=card(false,'&#127915;','Pass Lib – mensuel sans engagement','38,50\u00a0€/mois','','<span class="bdg b-all">Tous</span> Abonnement mensuel. Pratique si votre présence est irrégulière. <a href="https://www.transvilles.com/la-gamme-tarifaire/" target="_blank">transvilles.com/gamme-tarifaire</a>');
+    h+=card(false,'&#10084;','SIMOUV – tarif solidaire','Via CCAS','','<span class="bdg b-all">Sous conditions</span> Tarifs réduits pour les personnes en situation précaire. <a href="https://www.transvilles.com/le-simouv/" target="_blank">transvilles.com/le-simouv</a>');
+    h+=card(false,'&#128660;','Donkey Bike – dernier km','À la course','','<span class="bdg b-all">Tous</span> Complétez votre trajet tram + vélo libre-service pour rejoindre votre bâtiment. <a href="https://www.donkey.bike/fr" target="_blank">donkey.bike/fr</a>');
+    h+='</div></div>';
+  }
+
+  else if(mode==='covoit'){
+    var fmd=profil==='per'?300:0;
+    h+='<div class="sec"><div class="nudge">En covoiturage, vous <strong>partagez les frais</strong> avec vos passagers — ou vous profitez d\'un trajet peu coûteux si vous êtes passager. Même liberté que la voiture, à moitié prix ou moins.</div>';
+    h+='<div class="metrics">';
+    h+=metric(fr(Math.round(annuel*0.5)),'Économie si 1 passager');
+    h+=metric(fr(Math.round(annuel*0.67)),'Économie si 2 passagers');
+    h+=metric(profil==='per'?'+ 300\u00a0€/an':'Place dédiée','Bonus conducteur');
+    h+='</div>';
+    h+='<div class="bonus-box">&#x1F17F;&#xFE0F; <strong>Avantage parking\u00a0:</strong> proposer un trajet en covoiturage vous donne accès aux <strong>places de stationnement dédiées</strong> sur le campus — mieux situées et toujours disponibles.'+(profil==='per'?' Le <strong>Forfait Mobilités Durables</strong> vous verse jusqu\'à <strong>300\u00a0€/an</strong> exonérés d\'impôts.':'')+'</div>';
+    h+='<div class="cards">';
+    h+=card(true,'&#128205;','PassPass – covoiturage Hauts-de-France','','','<span class="bdg b-all">Tous</span> Plateforme régionale de covoiturage. Une communauté <strong>Valdunes / Le Poirier</strong> est à créer pour le campus\u00a0: contactez <strong>Marie Godmez</strong> (Solimob) · <a href="mailto:marie.godmez@associationphare.fr">marie.godmez@associationphare.fr</a> · 06\u00a084\u00a028\u00a022\u00a099. <a href="https://www.passpasscovoiturage.fr/" target="_blank">passpasscovoiturage.fr</a>');
+    if(profil==='per'){
+      h+=card(true,'&#128176;','Forfait Mobilités Durables – covoiturage','Jusqu\'à 300\u00a0€/an','','<span class="bdg b-per">Personnel</span> L\'UPHF verse jusqu\'à <strong>300\u00a0€/an</strong> (vélo + covoiturage cumulables), exonérés de cotisations et d\'impôts. <a href="https://numerique.uphf.fr/services/covoiturage" target="_blank">numerique.uphf.fr</a>');
+    }
+    h+=card(false,'&#128101;','Un siège = un trajet offert','','','<span class="bdg b-all">Tous</span> Covoiturer, c\'est aussi permettre à un étudiant ou un collègue <strong>sans voiture</strong> d\'accéder au campus. Un siège vide vous coûte de toute façon — autant qu\'il serve à quelqu\'un.');
+    h+='</div></div>';
+  }
+
+  else if(mode==='car'){
+    var totalKm=km*2*4*40;
+    h+='<div class="sec"><div class="nudge">La voiture seul est l\'option la plus coûteuse et la plus polluante. Voici ce qu\'elle vous coûte réellement — et ce que vous gagneriez à changer.</div>';
+    h+='<div class="metrics">';
+    h+=metric(fr(annuel),'Coût annuel estimé*');
+    h+=metric(Math.round(totalKm).toLocaleString('fr-FR')+'\u00a0km','km/an domicile–campus');
+    h+=metric('33\u00a0cts/km','Coût réel moyen (ADETEC)');
+    h+='</div>';
+    h+='<div class="stitle">Ce que vous gagneriez en changeant</div>';
+    var alts=[
+      {l:profil==='etu'?'Tram/bus (Pass&Go 20\u00a0€)':'Tram/bus (75\u00a0% remboursé)',c:profil==='etu'?20:90},
+      {l:profil==='etu'?'Vélo Grinsa (3\u00a0€/mois)':'Vélo reconditionné',c:profil==='etu'?36:600},
+      {l:'Covoiturage (2 passagers)',c:Math.round(annuel*0.33)},
+      {l:'Solimob VAE (60\u00a0€/mois)',c:720}
+    ];
+    var mx=annuel;
+    alts.forEach(function(a){
+      var sav=Math.max(0,annuel-a.c);
+      var pct=mx>0?Math.min(100,Math.round(sav/mx*100)):0;
+      h+='<div class="sbar-row"><span class="sbar-lbl">'+a.l+'</span><div class="sbar-bg"><div class="sbar-fill" style="width:'+pct+'%"></div></div><span class="sbar-val">'+fr(sav)+'/an</span></div>';
+    });
+    h+='<p style="font-size:11px;color:#888;margin-top:8px;">* 33\u00a0cts/km tous postes inclus (carburant, entretien, assurance, décote). Source\u00a0: ADETEC 2022.</p>';
+    h+='<div class="air-box">&#127807; <strong>Impact santé\u00a0:</strong> les transports routiers représentent <strong>31\u00a0% des émissions de GES</strong> en France. Les particules fines des voitures sont liées à des maladies cardiovasculaires et respiratoires. Dans les Hauts-de-France, la pollution de l\'air cause des milliers de décès prématurés chaque année.</div>';
+    h+='</div>';
+  }
+
+  else if(mode==='aides'){
+    h+='<div class="sec">';
+    h+='<div class="tags"><span class="tag t-blue">&#127979; Étudiant·e</span><span class="tag t-purple">&#128188; Personnel</span><span class="tag t-green">&#10003; Tous</span></div>';
+    h+='<div class="cards">';
+    if(profil==='etu'){
+      h+=card(true,'&#11088;','Pass&amp;Go – tram + bus + TER illimité','20\u00a0€ frais de dossier','free','<span class="bdg b-etu">&lt;25 ans</span> Abonnement annuel illimité. <a href="https://www.transvilles.com/votre-abonnement-passgo/" target="_blank">transvilles.com</a>');
+      h+=card(true,'&#9889;','Vebos – VAE gratuit à la BU','Gratuit','free','<span class="bdg b-etu">Étudiant·e</span> Prêt gratuit d\'un vélo à assistance électrique (kit Vebos) à la BU du campus Mont Houy.');
+      h+=card(true,'&#127381;','Grinsa – vélo reconditionné','3\u00a0€/mois — 36\u00a0€/an','','<span class="bdg b-etu">Étudiant·e</span> Location avec entretien inclus. <a href="https://www.grinsa.fr/" target="_blank">grinsa.fr</a>');
+      h+=card(false,'&#128690;','Maison du vélo – occasion','~120\u00a0€','','<span class="bdg b-all">Tous</span> Achat d\'un vélo d\'occasion à Valenciennes, avec ateliers de réparation.');
+    }
+    if(profil==='per'){
+      h+=card(true,'&#128181;','Abonnement TC pris en charge à 75\u00a0%','~90\u00a0€ nets/an','','<span class="bdg b-per">Personnel</span> L\'UPHF rembourse 75\u00a0% du Pass Elit annuel (360\u00a0€). Démarche via les RH.');
+      h+=card(true,'&#128176;','Forfait Mobilités Durables','Jusqu\'à 300\u00a0€/an','','<span class="bdg b-per">Personnel</span> Vélo et/ou covoiturage cumulables, exonéré d\'impôts. <a href="https://numerique.uphf.fr/services/covoiturage" target="_blank">numerique.uphf.fr</a>');
+      h+=card(false,'&#9889;','Flotte VAE reconditionnés UPHF','','','<span class="bdg b-per">Personnel</span> Contact\u00a0: <strong>Angelina &amp; Bertrand</strong> – service mobilité UPHF.');
+      h+=card(false,'&#128268;','Recharge VE gratuite sur le campus','Gratuit','free','<span class="bdg b-per">Personnel</span> Des bornes de recharge pour véhicules électriques sont disponibles sur le campus.');
+      h+=card(false,'&#128664;','Leasing social – véhicule électrique','−40\u00a0% État','','<span class="bdg b-per">Sous conditions de revenus</span> Dès le 30/09/2025. <a href="https://www.ecologie.gouv.fr/leasing-social" target="_blank">ecologie.gouv.fr</a>');
+    }
+    h+=card(false,'&#128690;','Solimob – location solidaire','VAE 60\u00a0€/mois','','<span class="bdg b-all">Tous</span> VAE, voitures (avec/sans permis), ateliers vélo, accompagnement covoiturage. <a href="https://solimob.fr/location-de-vehicules/" target="_blank">solimob.fr</a>');
+    h+=card(false,'&#128295;','Garages solidaires','Sous conditions','','<span class="bdg b-all">Tous</span><ul><li><strong>Poinfor</strong> – Valenciennes · 03\u00a027\u00a020\u00a017\u00a029</li><li><a href="https://www.siae-du-valenciennois.fr/garage-solidaire-du-hainaut/" target="_blank">Garage solidaire du Hainaut</a> (Denain)</li><li><a href="https://manaara.org/deroulement-du-programme-solidaire-mana-ara/" target="_blank">Norauto −30\u00a0%</a> · <a href="https://www.caremakersmobility.com/fr/offre-solidaire-entretien-et-reparation" target="_blank">Renault Caremakers −40\u00a0%</a></li><li>Microcrédit mobilité\u00a0: <a href="https://www.udaf59.fr/services-aux-familles/point-conseil-budget/microcredit/" target="_blank">UDAF 59</a></li></ul>');
+    h+=card(false,'&#127941;','Programmes nationaux vélo','','','<span class="bdg b-all">Tous</span><ul><li><strong>Vélos Égaux</strong> – cours + accès vélo, gratuit\u00a0: <a href="https://www.veloegaux.fr/devenir-beneficiaire/" target="_blank">veloegaux.fr</a></li><li><strong>Heureux Cyclage</strong> – ateliers autoréparation\u00a0: <a href="https://www.heureux-cyclage.org/" target="_blank">heureux-cyclage.org</a></li><li><strong>Donkey Bike</strong> – libre-service\u00a0: <a href="https://www.donkey.bike/fr" target="_blank">donkey.bike/fr</a></li></ul>');
+    h+='</div></div>';
+  }
+
+  document.getElementById('panel').innerHTML=h;
+}
+
+render();
+</script>
+</body>
+</html>
